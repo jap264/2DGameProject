@@ -145,6 +145,33 @@ void entity_draw(Entity *ent)
 	}
 }
 
+void follow(Entity *self, Entity *other, float speed)
+{
+	if (!self || !other) return;
 
+	if (self->position.y > other->position.y)
+	{
+		self->position.y -= speed;
+		//slog("following -y");
+	}
+
+	if (self->position.y < other->position.y)
+	{
+		self->position.y += speed;
+		//slog("following +y");
+	}
+	if (self->position.x > other->position.x)
+	{
+		self->position.x -= speed;
+		//slog("following -x");
+	}
+
+	if (self->position.x < other->position.x)
+	{
+		self->position.x += speed;
+		//slog("following +x");
+	}
+
+}
 
 /*eol@eof*/

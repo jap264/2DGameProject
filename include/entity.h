@@ -15,11 +15,12 @@ typedef struct Entity_s
 	float       frame;
 	float       frameRate;
 	int         frameCount;
-	void(*update)(struct Entity_s *self);
-	void(*think)(struct Entity_s *self);
-	void(*draw)(struct Entity_s *self);
-	void(*free)(struct Entity_s *self);
+	void		(*update)(struct Entity_s *self);
+	void		(*think)(struct Entity_s *self);
+	void		(*draw)(struct Entity_s *self);
+	void		(*free)(struct Entity_s *self);
 	void       *data;
+	int			ent_type;
 }Entity;
 
 /**
@@ -62,5 +63,21 @@ void entity_free(Entity *ent);
 * @param ent the entity to draw
 */
 void entity_draw(Entity *ent);
+
+/*
+*	@brief makes an entity follow another entity
+*	@param self entity that is following
+*	@param other entity that is being followed
+*	@param speed distance to move every frame
+*/
+void follow(Entity *self, Entity *other, float speed);
+
+
+/*
+*	@brief checks collision with another entity
+*	@param self first entity
+*	@param other second entity
+*/
+int checkCollision(Entity *self, Entity *other);
 
 #endif
