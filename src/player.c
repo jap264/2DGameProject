@@ -71,11 +71,28 @@ void player_think(Entity *self)
 	// check for motion
 	if (keys[SDL_SCANCODE_W])
 	{
-		vector2d_scale(thrust, aimdir, 5);
-		vector2d_add(self->velocity, self->velocity, thrust);
+		self->position.y -= 3;
+		/*vector2d_scale(thrust, aimdir, 2);
+		vector2d_add(self->velocity, self->velocity, thrust);*/
 	}
-
-
+	if (keys[SDL_SCANCODE_S])
+	{
+		self->position.y += 3;
+		/*vector2d_scale(thrust, aimdir, -2);
+		vector2d_add(self->velocity, self->velocity, thrust);*/
+	}
+	if (keys[SDL_SCANCODE_A])
+	{
+		self->position.x -= 3;
+		/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
+		vector2d_add(self->velocity, self->velocity, thrust);*/
+	}
+	if (keys[SDL_SCANCODE_D])
+	{
+		self->position.x += 3;
+		/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
+		vector2d_add(self->velocity, self->velocity, thrust);*/
+	}
 
 }
 

@@ -34,12 +34,22 @@ void camera_move(Vector2D move)
 
 Bool camera_point_on_screen(Vector2D point)
 {
-	return shape_point_in_rect(point, shape_rect_from_sdl_rect(Camera));
+	if ((point.x < Camera.x) || (point.x > Camera.x + Camera.w) ||
+		(point.y < Camera.y) || (point.y > Camera.y + Camera.h))
+	{
+			return false;
+	}
+	return true;
 }
 
 Bool camera_rect_on_screen(SDL_Rect rect)
 {
-	return shape_rect_collision(shape_rect_from_sdl_rect(rect), shape_rect_from_sdl_rect(Camera));
+	if ((rect.x < Camera.x) || (rect.x > Camera.x + Camera.w) ||
+		(rect.y < Camera.y) || (rect.y > Camera.y + Camera.h))
+	{
+		return false;
+	}
+	return true;
 }
 
 SDL_Rect camera_get_rect()

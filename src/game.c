@@ -7,6 +7,7 @@
 #include "shape.h"
 #include "camera.h"
 #include "entity.h"
+#include "level.h"
 
 int main(int argc, char * argv[])
 {
@@ -22,6 +23,8 @@ int main(int argc, char * argv[])
 
 	Entity *playerEnt = NULL;
 	Player *player;
+
+	Level *level;
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -44,10 +47,11 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     background = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
+	level = level_load("levels/exampleLevel.json");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
 
 	//Player Spawn
-	player_spawn(vector2d(100,100));
+	player_spawn(vector2d(500,250));
 	player = get_player();
 	playerEnt = get_player_entity();
 
@@ -64,6 +68,8 @@ int main(int argc, char * argv[])
         
 		entity_manager_think_entities();
 		entity_manager_update_entities();
+
+		level_update(level);
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
