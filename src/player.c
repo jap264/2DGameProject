@@ -3,6 +3,7 @@
 #include "player.h"
 #include "camera.h"
 #include "entity.h"
+#include "bullet.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -75,24 +76,29 @@ void player_think(Entity *self)
 		/*vector2d_scale(thrust, aimdir, 2);
 		vector2d_add(self->velocity, self->velocity, thrust);*/
 	}
-	if (keys[SDL_SCANCODE_S])
+	
+	else if (keys[SDL_SCANCODE_S])
 	{
 		self->position.y += 3;
 		/*vector2d_scale(thrust, aimdir, -2);
 		vector2d_add(self->velocity, self->velocity, thrust);*/
 	}
+	
 	if (keys[SDL_SCANCODE_A])
 	{
 		self->position.x -= 3;
 		/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
 		vector2d_add(self->velocity, self->velocity, thrust);*/
 	}
-	if (keys[SDL_SCANCODE_D])
+	
+	else if (keys[SDL_SCANCODE_D])
 	{
 		self->position.x += 3;
 		/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
 		vector2d_add(self->velocity, self->velocity, thrust);*/
 	}
+
+	if (SDL_GetMouseState(NULL, NULL) && SDL_BUTTON(SDL_BUTTON_LEFT)) bullet_spawn(mx, my);
 
 }
 

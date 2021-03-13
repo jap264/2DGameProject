@@ -48,7 +48,7 @@ int main(int argc, char * argv[])
     /*demo setup*/
     background = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
 	level = level_load("levels/exampleLevel.json");
-    mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+    mouse = gf2d_sprite_load_image("images/crosshair.png");
 
 	//Player Spawn
 	player_spawn(vector2d(500,250));
@@ -63,8 +63,9 @@ int main(int argc, char * argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
-        mf+=0.1;
-        if (mf >= 16.0)mf = 0;
+		//if (SDL_GetTicks() % 10000) slog("%i, %i", mx, my);
+        /*mf+=0.1;
+        if (mf >= 16.0)mf = 0;*/
         
 		entity_manager_think_entities();
 		entity_manager_update_entities();

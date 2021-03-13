@@ -23,7 +23,7 @@ typedef struct Player_S
 * @param position the screen position to spawn the player at
 * @return NULL on error, or a pointer to a new player entity
 */
-Entity *player_spawn();
+Entity *player_spawn(Vector2D position);
 
 /*
 *	@brief checks what the player collided with and respond accordingly

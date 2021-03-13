@@ -21,6 +21,9 @@ typedef struct Entity_s
 	void		(*free)(struct Entity_s *self);
 	void       *data;
 	int			ent_type;
+	int			radius;
+	int			destinationx;
+	int			destinationy;
 }Entity;
 
 /**
@@ -76,12 +79,25 @@ void entity_draw(Entity *ent);
 */
 void follow(Entity *self, Entity *other, float speed);
 
+/*
+*	@brief makes an entity travel to a 2d space
+*	@param self entity that is following
+*	@param destinationx location (x) to travel to
+*	@param destinationy location (y) to travel to
+*	@param speed distance to move every frame
+*/
+void travel(Entity *self, int destinationx, int destinationy, float speed);
 
 /*
 *	@brief checks collision with another entity
 *	@param self first entity
 *	@param other second entity
 */
-int checkCollision(Entity *self, Entity *other);
+Bool checkCollision(Entity *self, Entity *other);
+
+/*
+*	@brief checks collisions between all entities
+*/
+void check_all_collisions();
 
 #endif

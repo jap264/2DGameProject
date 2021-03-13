@@ -204,4 +204,72 @@ void follow(Entity *self, Entity *other, float speed)
 
 }
 
+void travel(Entity *self, int destinationx, int destinationy, float speed)
+{
+	if (!self) return;
+
+	if (self->position.y > destinationy)
+	{
+		self->position.y -= speed;
+		//slog("following -y");
+	}
+
+	if (self->position.y < destinationy)
+	{
+		self->position.y += speed;
+		//slog("following +y");
+	}
+	if (self->position.x > destinationx)
+	{
+		self->position.x -= speed;
+		//slog("following -x");
+	}
+
+	if (self->position.x < destinationx)
+	{
+		self->position.x += speed;
+		//slog("following +x");
+	}
+
+}
+
+Bool checkCollision(Entity *self, Entity *other)
+{
+	if (!self || !other) return false;
+
+	float distance_x = self->position.x - other->position.x;
+	float distance_y = self->position.y - other->position.y;
+
+	if (self->radius == 0 || other->radius == 0) return false;
+	//slog("%f, %f", self->radius, other->radius);
+
+	float radii_sum = self->radius + other->radius;
+
+	if ((distance_x * distance_x) + (distance_y * distance_y) <= (radii_sum * radii_sum)) return true;
+
+	return false;
+}
+
+void check_all_collisions()
+{
+	for (int i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (!entity_manager.entity_list[i]._inuse) continue;
+
+		for (int x = 0; x < entity_manager.max_entities; x++)
+		{
+			if (&entity_manager.entity_list[x] == &entity_manager.entity_list[i]) continue;
+			if (!&entity_manager.entity_list[x] || !&entity_manager.entity_list[i])
+			{
+				slog("null entities");
+				continue;
+			}
+
+			if (checkCollision(&entity_manager.entity_list[x], &entity_manager.entity_list[i]))
+			{
+				slog("collision");
+			}
+		}
+	}
+}
 /*eol@eof*/
