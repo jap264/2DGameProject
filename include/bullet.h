@@ -37,4 +37,5 @@ Entity *get_bullet_entity();
 */
 Bullet *get_bullet();
 
+void bullet_travel(Entity *self);
 #endif

@@ -28,6 +28,8 @@ Entity *player_spawn(Vector2D position)
 	player->ent->think = player_think;
 	player->ent->rotation.x = 64;
 	player->ent->rotation.y = 64;
+	player->maxHealth = 3;
+	player->health = player->maxHealth;
 	return player->ent;
 }
 
