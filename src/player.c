@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "bullet.h"
 #include "rocket.h"
+#include "mine.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -15,6 +16,9 @@ static int smgDelay = 0;
 static int shotgunDelay = 0;
 static int lmgDelay = 0;
 static int sniperDelay = 0;
+static int thunderDelay = 0;
+static int grenadeDelay = 0;
+static int mineDelay = 0;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -115,6 +119,9 @@ void player_think(Entity *self)
 	if (shotgunDelay > 0) shotgunDelay--;
 	if (lmgDelay > 0) lmgDelay--;
 	if (sniperDelay > 0) sniperDelay--;
+	if (thunderDelay > 0) thunderDelay--;
+	if (grenadeDelay > 0) grenadeDelay--;
+	if (mineDelay > 0) mineDelay--;
 
 	if (SDL_GetMouseState(NULL, NULL) && SDL_BUTTON(SDL_BUTTON_LEFT))
 	{
@@ -136,13 +143,14 @@ void player_think(Entity *self)
 				}
 				break;
 
-			/*case 3:
+			case 3:
 				if (shotgunDelay == 0)
 				{
 					shotgun_shells_spawn(mx, my);
 					shotgunDelay = 35;
 				}
-				break;*/
+				break;
+
 			case 4:
 				if(lmgDelay == 0)
 				{
@@ -165,6 +173,31 @@ void player_think(Entity *self)
 					rocket_spawn();
 				}
 				break;
+
+			case 7:
+				if (thunderDelay == 0)
+				{
+					thunderwave_spawn(mx,my);
+					thunderDelay = 120;
+				}
+				break;
+
+			case 8:
+				if (grenadeDelay == 0)
+				{
+					grenade_spawn(mx, my);
+					grenadeDelay = 40;
+				}
+				break;
+
+			case 9:
+				if (mineDelay == 0)
+				{
+					mine_spawn();
+					mineDelay = 15;
+				}
+				break;
+
 		}
 	}
 

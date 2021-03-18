@@ -90,7 +90,6 @@ void rocket_think(Entity *self)
 	vector2d_add(self->velocity, self->velocity, thrust);
 
 	//need a fail safe to delete rockets
-	/*self->ttv--;*/
 	if (self->ttv == 1) rocket_explode(self);
 }
 

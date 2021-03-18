@@ -141,13 +141,13 @@ int main(int argc, char * argv[])
 
 			else if (keys[SDL_SCANCODE_Q])
 			{
-				weapon = gf2d_sprite_load_image("images/grenade.png");
+				weapon = gf2d_sprite_load_image("images/grenadeUI.png");
 				player->currWeapon = 8;
 			}
 
 			else if (keys[SDL_SCANCODE_E])
 			{
-				weapon = gf2d_sprite_load_image("images/mine.png");
+				weapon = gf2d_sprite_load_image("images/mineUI.png");
 				player->currWeapon = 9;
 			}
 

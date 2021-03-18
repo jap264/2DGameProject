@@ -16,7 +16,7 @@ Entity *grenade_spawn(int destinationx, int destinationy)
 		slog("failed to create entity for the grenade");
 		return NULL;
 	}
-	ent->sprite = gf2d_sprite_load_image("images/pistol_round.png");
+	ent->sprite = gf2d_sprite_load_image("images/grenade.png");
 	Vector2D spawn;
 	spawn.x = get_player_entity()->position.x + 50;
 	spawn.y = get_player_entity()->position.y + 50;
@@ -28,6 +28,22 @@ Entity *grenade_spawn(int destinationx, int destinationy)
 	ent->ttv = 200;
 	ent->speed = 2;
 	grenade_travel(ent);
+	return ent;
+}
+
+Entity *grenade_explosion_spawn(Vector2D position)
+{
+	Entity *ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for the rocket");
+		return NULL;
+	}
+
+	ent->sprite = gf2d_sprite_load_image("images/explosion_large.png");
+	ent->position = position;
+	ent->ttv = 100;
+
 	return ent;
 }
 
@@ -52,10 +68,12 @@ void grenade_update(Entity *self)
 void grenade_think(Entity *self)
 {
 	if (!self) return;
-	//need a fail safe to delete grenades
-	self->ttv--;
-	if (self->ttv == 0) entity_free(self);
+	
+	if (self->ttv == 50) vector2d_clear(self->velocity);
+	if (self->ttv == 1) grenade_explosion_spawn(self->position);
 }
+
+
 
 void grenade_travel(Entity *self)
 {

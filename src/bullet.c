@@ -128,12 +128,6 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 
 	ent->destinationx = destinationx;
 	ent->destinationy = destinationy;
-
-	ent2->destinationx = destinationx;
-	ent2->destinationy = destinationy;
-
-	ent3->destinationx = destinationx;
-	ent3->destinationy = destinationy;
 	
 	ent->update = bullet_update;
 	ent->think = bullet_think;
@@ -146,9 +140,30 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 	ent2->speed = 6;
 	ent3->speed = 6;
 
+	shotgun_spread(ent, ent2, ent3);
+}
+
+Entity *thunderwave_spawn(int destinationx, int destinationy)
+{
+	Entity *ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for the bullet");
+		return NULL;
+	}
+	ent->sprite = gf2d_sprite_load_image("images/thunderwave.png");
+	Vector2D spawn;
+	spawn.x = get_player_entity()->position.x;
+	spawn.y = get_player_entity()->position.y;
+	vector2d_copy(ent->position, spawn);
+	ent->destinationx = destinationx;
+	ent->destinationy = destinationy;
+	ent->update = bullet_update;
+	ent->think = bullet_think;
+	ent->ttv = 400;
+	ent->speed = 8;
 	bullet_travel(ent);
-	bullet_travel(ent2);
-	bullet_travel(ent3);
+	return ent;
 }
 
 void bullet_update(Entity *self)
@@ -181,9 +196,40 @@ void bullet_travel(Entity *self)
 	Vector2D aimdir, camera, thrust;
 	mx += camera.x;
 	my += camera.y;
-	aimdir.x = mx - (self->position.x);
-	aimdir.y = my - (self->position.y);
+	aimdir.x = mx - (self->position.x +50);
+	aimdir.y = my - (self->position.y +50);
 	vector2d_normalize(&aimdir);
 	vector2d_scale(thrust, aimdir, self->speed);
 	vector2d_add(self->velocity, self->velocity, thrust);
+}
+
+void shotgun_spread(Entity *bullet1, Entity *bullet2, Entity *bullet3)
+{
+	if (!bullet1 || !bullet2 || !bullet3) return;
+	int mx = bullet1->destinationx, my = bullet1->destinationy;
+	Vector2D aimdir, aimdir2, aimdir3, camera, thrust;
+	mx += camera.x;
+	my += camera.y;
+
+	aimdir.x = mx - (bullet1->position.x + 60);
+	aimdir.y = my - (bullet1->position.y + 60);
+
+	aimdir2.x = mx - (bullet2->position.x);
+	aimdir2.y = my - (bullet2->position.y);
+
+	aimdir3.x = mx - (bullet3->position.x - 100);
+	aimdir3.y = my - (bullet3->position.y - 100);
+
+	vector2d_normalize(&aimdir);
+	vector2d_normalize(&aimdir2);
+	vector2d_normalize(&aimdir3);
+
+	vector2d_scale(thrust, aimdir, bullet1->speed);
+	vector2d_add(bullet1->velocity, bullet1->velocity, thrust);
+
+	vector2d_scale(thrust, aimdir2, bullet2->speed);
+	vector2d_add(bullet2->velocity, bullet2->velocity, thrust);
+
+	vector2d_scale(thrust, aimdir3, bullet3->speed);
+	vector2d_add(bullet3->velocity, bullet3->velocity, thrust);
 }

@@ -1,5 +1,5 @@
-#ifndef __grenade_H__
-#define __grenade_H__
+#ifndef __GRENADE_H__
+#define __GRENADE_H__
 
 #include "SDL.h"
 #include "gfc_vector.h"
@@ -14,6 +14,8 @@
 * @return NULL on error, or a pointer to a new grenade entity
 */
 Entity *grenade_spawn(int destinationx, int destinationy);
+
+Entity *grenade_explosion_spawn(Vector2D position);
 
 void grenade_travel(Entity *self);
 
