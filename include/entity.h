@@ -24,6 +24,9 @@ typedef struct Entity_s
 	int			radius;
 	int			destinationx;
 	int			destinationy;
+	int			ttv; //time to live
+	int			speed;
+
 }Entity;
 
 /**

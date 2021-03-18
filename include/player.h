@@ -15,6 +15,7 @@ typedef struct Player_S
 	int status; //alive or dead
 	int points;
 	int enemiesKilled;
+	int currWeapon;
 
 }Player;
 

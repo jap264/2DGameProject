@@ -14,28 +14,45 @@ typedef struct Bullet_S
 }Bullet;
 
 /**
-* @brief spawn a bullet entity
+* @brief spawn a pistol round entity
 * @param destinationx location (x) for the entity to travel to
 * @param destinationy location (y) for the entity to travel to
 * @return NULL on error, or a pointer to a new bullet entity
 */
-Entity *bullet_spawn(int destinationx, int destinationy);
+Entity *pistol_round_spawn(int destinationx, int destinationy);
 
-/*
-*	@brief checks what the bullet collided with and respond accordingly
-*	@param other sthe entity the bullet collided with
+/**
+* @brief spawn a light round entity
+* @param destinationx location (x) for the entity to travel to
+* @param destinationy location (y) for the entity to travel to
+* @return NULL on error, or a pointer to a new bullet entity
 */
-void bullet_collide(Entity *other);
+Entity *light_round_spawn(int destinationx, int destinationy);
 
-/*
-*	@brief returns the bullet's entity
+/**
+* @brief spawn three shotgun shell entities
+* @param destinationx location (x) for the entity to travel to
+* @param destinationy location (y) for the entity to travel to
+* @return NULL on error, or a pointer to a new bullet entity
 */
-Entity *get_bullet_entity();
+void *shotgun_shells_spawn(int destinationx, int destinationy);
 
-/*
-*	@brief returns the bullet
+/**
+* @brief spawn a heavy round entity
+* @param destinationx location (x) for the entity to travel to
+* @param destinationy location (y) for the entity to travel to
+* @return NULL on error, or a pointer to a new bullet entity
 */
-Bullet *get_bullet();
+Entity *heavy_round_spawn(int destinationx, int destinationy);
+
+/**
+* @brief spawn a heavy round entity
+* @param destinationx location (x) for the entity to travel to
+* @param destinationy location (y) for the entity to travel to
+* @return NULL on error, or a pointer to a new bullet entity
+*/
+Entity *sniper_round_spawn(int destinationx, int destinationy);
 
 void bullet_travel(Entity *self);
+
 #endif

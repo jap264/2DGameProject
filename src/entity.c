@@ -85,6 +85,10 @@ void entity_manager_think_entities()
 		{
 			entity_manager.entity_list[i].think(&entity_manager.entity_list[i]);
 		}
+
+		if (entity_manager.entity_list[i].ttv == NULL)continue;
+		if (entity_manager.entity_list[i].ttv > 0) entity_manager.entity_list[i].ttv--;
+		if (entity_manager.entity_list[i].ttv == 0) entity_free(&entity_manager.entity_list[i]);
 	}
 }
 

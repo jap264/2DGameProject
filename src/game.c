@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "level.h"
+#include "rocket.h"
 
 int main(int argc, char * argv[])
 {
@@ -58,6 +59,9 @@ int main(int argc, char * argv[])
 	player = get_player();
 	playerEnt = get_player_entity();
 
+	//Weapon Init
+	rocket_init();
+
 	//Health UI
 	if (get_player_health() == 3) health = gf2d_sprite_load_image("images/full_health.png");
 	else if (get_player_health() == 2) health = gf2d_sprite_load_image("images/half_health.png");
@@ -93,16 +97,65 @@ int main(int argc, char * argv[])
             
 			//UI elements last
 				//Weapon UI
-			if (keys[SDL_SCANCODE_1]) weapon = gf2d_sprite_load_image("images/pistol.png");
-			else if (keys[SDL_SCANCODE_2]) weapon = gf2d_sprite_load_image("images/submachine_gun.png");
-			else if (keys[SDL_SCANCODE_3]) weapon = gf2d_sprite_load_image("images/lmg.png");
-			else if (keys[SDL_SCANCODE_4]) weapon = gf2d_sprite_load_image("images/sniper.png");
-			else if (keys[SDL_SCANCODE_5]) weapon = gf2d_sprite_load_image("images/rocket_launcher.png");
-			else if (keys[SDL_SCANCODE_6]) weapon = gf2d_sprite_load_image("images/thunder_gun.png");
-			else if (keys[SDL_SCANCODE_Q]) weapon = gf2d_sprite_load_image("images/hammer.png");
-			else if (keys[SDL_SCANCODE_E]) weapon = gf2d_sprite_load_image("images/grenade.png");
-			else if (keys[SDL_SCANCODE_Z]) weapon = gf2d_sprite_load_image("images/mine.png");
-			else if (keys[SDL_SCANCODE_C]) weapon = gf2d_sprite_load_image("images/monkey_bomb.png");
+			if (keys[SDL_SCANCODE_1])
+			{
+				weapon = gf2d_sprite_load_image("images/pistol.png");
+				player->currWeapon = 1;
+			}
+
+			else if (keys[SDL_SCANCODE_2])
+			{
+				weapon = gf2d_sprite_load_image("images/submachine_gun.png");
+				player->currWeapon = 2;
+			}
+
+			else if (keys[SDL_SCANCODE_3])
+			{
+				weapon = gf2d_sprite_load_image("images/shotgun.png");
+				player->currWeapon = 3;
+			}
+
+			else if (keys[SDL_SCANCODE_4])
+			{
+				weapon = gf2d_sprite_load_image("images/lmg.png");
+				player->currWeapon = 4;
+			}
+
+			else if (keys[SDL_SCANCODE_5])
+			{
+				weapon = gf2d_sprite_load_image("images/sniper.png");
+				player->currWeapon = 5;
+			}
+
+			else if (keys[SDL_SCANCODE_6])
+			{
+				weapon = gf2d_sprite_load_image("images/rocket_launcher.png");
+				player->currWeapon = 6;
+			}
+
+			else if (keys[SDL_SCANCODE_7])
+			{
+				weapon = gf2d_sprite_load_image("images/thunder_gun.png");
+				player->currWeapon = 7;
+			}
+
+			else if (keys[SDL_SCANCODE_Q])
+			{
+				weapon = gf2d_sprite_load_image("images/grenade.png");
+				player->currWeapon = 8;
+			}
+
+			else if (keys[SDL_SCANCODE_E])
+			{
+				weapon = gf2d_sprite_load_image("images/mine.png");
+				player->currWeapon = 9;
+			}
+
+			else if (keys[SDL_SCANCODE_F])
+			{
+				weapon = gf2d_sprite_load_image("images/hammer.png");
+				player->currWeapon = 10;
+			}
 
 
 			gf2d_sprite_draw(

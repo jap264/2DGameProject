@@ -4,16 +4,22 @@
 #include "camera.h"
 #include "entity.h"
 #include "bullet.h"
+#include "rocket.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
 
 static Player *player = { 0 };
+static int pistolDelay = 0;
+static int smgDelay = 0;
+static int shotgunDelay = 0;
+static int lmgDelay = 0;
+static int sniperDelay = 0;
 
 Entity *player_spawn(Vector2D position)
 {
 	player = (Player *)gfc_allocate_array(sizeof(Player), 1);
-	Entity *ent = ent = entity_new();
+	Entity *ent = entity_new();
 	if (!ent)
 	{
 		slog("failed to create entity for the player");
@@ -30,6 +36,7 @@ Entity *player_spawn(Vector2D position)
 	player->ent->rotation.y = 64;
 	player->maxHealth = 3;
 	player->health = player->maxHealth;
+	player->currWeapon = 1;
 	return player->ent;
 }
 
@@ -72,35 +79,94 @@ void player_think(Entity *self)
 	// turn aimdir into a unit vector
 	vector2d_normalize(&aimdir);
 	// check for motion
-	if (keys[SDL_SCANCODE_W])
+	if (player->currWeapon != 4)
 	{
-		self->position.y -= 3;
-		/*vector2d_scale(thrust, aimdir, 2);
-		vector2d_add(self->velocity, self->velocity, thrust);*/
-	}
+		if (keys[SDL_SCANCODE_W])
+		{
+			self->position.y -= 3;
+			/*vector2d_scale(thrust, aimdir, 2);
+			vector2d_add(self->velocity, self->velocity, thrust);*/
+		}
 	
-	else if (keys[SDL_SCANCODE_S])
-	{
-		self->position.y += 3;
-		/*vector2d_scale(thrust, aimdir, -2);
-		vector2d_add(self->velocity, self->velocity, thrust);*/
-	}
+		else if (keys[SDL_SCANCODE_S])
+		{
+			self->position.y += 3;
+			/*vector2d_scale(thrust, aimdir, -2);
+			vector2d_add(self->velocity, self->velocity, thrust);*/
+		}
 	
-	if (keys[SDL_SCANCODE_A])
-	{
-		self->position.x -= 3;
-		/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
-		vector2d_add(self->velocity, self->velocity, thrust);*/
-	}
+		if (keys[SDL_SCANCODE_A])
+		{
+			self->position.x -= 3;
+			/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
+			vector2d_add(self->velocity, self->velocity, thrust);*/
+		}
 	
-	else if (keys[SDL_SCANCODE_D])
-	{
-		self->position.x += 3;
-		/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
-		vector2d_add(self->velocity, self->velocity, thrust);*/
+		else if (keys[SDL_SCANCODE_D])
+		{
+			self->position.x += 3;
+			/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
+			vector2d_add(self->velocity, self->velocity, thrust);*/
+		}
 	}
 
-	if (SDL_GetMouseState(NULL, NULL) && SDL_BUTTON(SDL_BUTTON_LEFT)) bullet_spawn(mx, my);
+	if (pistolDelay > 0) pistolDelay--;
+	if (smgDelay > 0) smgDelay--;
+	if (shotgunDelay > 0) shotgunDelay--;
+	if (lmgDelay > 0) lmgDelay--;
+	if (sniperDelay > 0) sniperDelay--;
+
+	if (SDL_GetMouseState(NULL, NULL) && SDL_BUTTON(SDL_BUTTON_LEFT))
+	{
+		switch (player->currWeapon)
+		{
+			case 1:
+				if (pistolDelay == 0)
+				{
+					pistol_round_spawn(mx, my);
+					pistolDelay = 50;
+				}
+				break;
+
+			case 2:
+				if (smgDelay == 0)
+				{
+					light_round_spawn(mx, my);
+					smgDelay = 20;
+				}
+				break;
+
+			/*case 3:
+				if (shotgunDelay == 0)
+				{
+					shotgun_shells_spawn(mx, my);
+					shotgunDelay = 35;
+				}
+				break;*/
+			case 4:
+				if(lmgDelay == 0)
+				{
+					heavy_round_spawn(mx, my);
+					lmgDelay = 10;
+				}
+				break;
+
+			case 5:
+				if (sniperDelay == 0)
+				{
+					sniper_round_spawn(mx, my);
+					sniperDelay = 100;
+				}
+				break;
+
+			case 6:
+				if (!get_rocket()->alive)
+				{
+					rocket_spawn();
+				}
+				break;
+		}
+	}
 
 }
 
