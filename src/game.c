@@ -157,6 +157,15 @@ int main(int argc, char * argv[])
 				player->currWeapon = 10;
 			}
 
+			if (keys[SDL_SCANCODE_LSHIFT])
+			{
+				player->p_firerate = true;
+			}
+			if (keys[SDL_SCANCODE_RSHIFT])
+			{
+				player->p_firerate = false;
+			}
+
 
 			gf2d_sprite_draw(
                 mouse,

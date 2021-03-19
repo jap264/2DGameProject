@@ -16,6 +16,9 @@ typedef struct Player_S
 	int points;
 	int enemiesKilled;
 	int currWeapon;
+	Bool p_speed;
+	Bool p_firerate;
+	Bool p_invinc;
 
 }Player;
 

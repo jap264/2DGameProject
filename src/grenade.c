@@ -41,7 +41,10 @@ Entity *grenade_explosion_spawn(Vector2D position)
 	}
 
 	ent->sprite = gf2d_sprite_load_image("images/explosion_large.png");
-	ent->position = position;
+	Vector2D spawn;
+	spawn.x = position.x - 20;
+	spawn.y = position.y - 20;
+	ent->position = spawn;
 	ent->ttv = 100;
 
 	return ent;

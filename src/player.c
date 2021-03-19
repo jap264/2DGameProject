@@ -19,6 +19,7 @@ static int sniperDelay = 0;
 static int thunderDelay = 0;
 static int grenadeDelay = 0;
 static int mineDelay = 0;
+static int hammerDelay = 0;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -38,9 +39,13 @@ Entity *player_spawn(Vector2D position)
 	player->ent->think = player_think;
 	player->ent->rotation.x = 64;
 	player->ent->rotation.y = 64;
+	player->ent->speed = 3;
 	player->maxHealth = 3;
 	player->health = player->maxHealth;
 	player->currWeapon = 1;
+	player->p_speed = false;
+	player->p_firerate = false;
+	player->p_invinc = false;
 	return player->ent;
 }
 
@@ -80,6 +85,9 @@ void player_think(Entity *self)
 	angle = vector_angle(aimdir.x, aimdir.y);
 	self->rotation.z = angle + 90;
 
+	if (player->p_speed == true) self->speed = 6;
+	else self->speed = 3;
+
 	// turn aimdir into a unit vector
 	vector2d_normalize(&aimdir);
 	// check for motion
@@ -87,28 +95,28 @@ void player_think(Entity *self)
 	{
 		if (keys[SDL_SCANCODE_W])
 		{
-			self->position.y -= 3;
+			self->position.y -= self->speed;
 			/*vector2d_scale(thrust, aimdir, 2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
 	
 		else if (keys[SDL_SCANCODE_S])
 		{
-			self->position.y += 3;
+			self->position.y += self->speed;
 			/*vector2d_scale(thrust, aimdir, -2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
 	
 		if (keys[SDL_SCANCODE_A])
 		{
-			self->position.x -= 3;
+			self->position.x -= self->speed;
 			/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
 	
 		else if (keys[SDL_SCANCODE_D])
 		{
-			self->position.x += 3;
+			self->position.x += self->speed;
 			/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
@@ -122,6 +130,7 @@ void player_think(Entity *self)
 	if (thunderDelay > 0) thunderDelay--;
 	if (grenadeDelay > 0) grenadeDelay--;
 	if (mineDelay > 0) mineDelay--;
+	if (hammerDelay > 0) hammerDelay--;
 
 	if (SDL_GetMouseState(NULL, NULL) && SDL_BUTTON(SDL_BUTTON_LEFT))
 	{
@@ -131,7 +140,8 @@ void player_think(Entity *self)
 				if (pistolDelay == 0)
 				{
 					pistol_round_spawn(mx, my);
-					pistolDelay = 50;
+					if (player->p_firerate == false) pistolDelay = 50;
+					else pistolDelay = 25;
 				}
 				break;
 
@@ -139,7 +149,8 @@ void player_think(Entity *self)
 				if (smgDelay == 0)
 				{
 					light_round_spawn(mx, my);
-					smgDelay = 20;
+					if (player->p_firerate == false) smgDelay = 20;
+					else smgDelay = 10;
 				}
 				break;
 
@@ -147,7 +158,8 @@ void player_think(Entity *self)
 				if (shotgunDelay == 0)
 				{
 					shotgun_shells_spawn(mx, my);
-					shotgunDelay = 35;
+					if (player->p_firerate == false) shotgunDelay = 40;
+					else shotgunDelay = 20;
 				}
 				break;
 
@@ -155,7 +167,8 @@ void player_think(Entity *self)
 				if(lmgDelay == 0)
 				{
 					heavy_round_spawn(mx, my);
-					lmgDelay = 10;
+					if (player->p_firerate == false) lmgDelay = 10;
+					else lmgDelay = 5;
 				}
 				break;
 
@@ -163,7 +176,8 @@ void player_think(Entity *self)
 				if (sniperDelay == 0)
 				{
 					sniper_round_spawn(mx, my);
-					sniperDelay = 100;
+					if (player->p_firerate == false) sniperDelay = 100;
+					else sniperDelay = 50;
 				}
 				break;
 
@@ -178,7 +192,8 @@ void player_think(Entity *self)
 				if (thunderDelay == 0)
 				{
 					thunderwave_spawn(mx,my);
-					thunderDelay = 120;
+					if (player->p_firerate == false) thunderDelay = 120;
+					else thunderDelay = 60;
 				}
 				break;
 
@@ -186,7 +201,8 @@ void player_think(Entity *self)
 				if (grenadeDelay == 0)
 				{
 					grenade_spawn(mx, my);
-					grenadeDelay = 40;
+					if (player->p_firerate == false) grenadeDelay = 40;
+					else grenadeDelay = 20;
 				}
 				break;
 
@@ -194,10 +210,19 @@ void player_think(Entity *self)
 				if (mineDelay == 0)
 				{
 					mine_spawn();
-					mineDelay = 15;
+					if (player->p_firerate == false) mineDelay = 15;
+					else mineDelay = 8;
 				}
 				break;
 
+			case 10:
+				if (hammerDelay == 0)
+				{
+					ground_pound_spawn();
+					if (player->p_firerate == false) hammerDelay = 100;
+					else hammerDelay = 50;
+				}
+				break;
 		}
 	}
 

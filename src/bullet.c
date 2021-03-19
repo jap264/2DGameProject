@@ -7,6 +7,8 @@
 
 void bullet_update(Entity *self);
 void bullet_think(Entity *self);
+void bullet_travel(Entity *self);
+void shotgun_spread(Entity *bullet1, Entity *bullet2, Entity *bullet3);
 
 Entity *pistol_round_spawn(int destinationx, int destinationy)
 {
@@ -162,7 +164,7 @@ Entity *thunderwave_spawn(int destinationx, int destinationy)
 	ent->think = bullet_think;
 	ent->ttv = 400;
 	ent->speed = 8;
-	bullet_travel(ent);
+	thunderwave_travel(ent);
 	return ent;
 }
 
@@ -196,8 +198,8 @@ void bullet_travel(Entity *self)
 	Vector2D aimdir, camera, thrust;
 	mx += camera.x;
 	my += camera.y;
-	aimdir.x = mx - (self->position.x +50);
-	aimdir.y = my - (self->position.y +50);
+	aimdir.x = mx - (self->position.x);
+	aimdir.y = my - (self->position.y);
 	vector2d_normalize(&aimdir);
 	vector2d_scale(thrust, aimdir, self->speed);
 	vector2d_add(self->velocity, self->velocity, thrust);
@@ -232,4 +234,18 @@ void shotgun_spread(Entity *bullet1, Entity *bullet2, Entity *bullet3)
 
 	vector2d_scale(thrust, aimdir3, bullet3->speed);
 	vector2d_add(bullet3->velocity, bullet3->velocity, thrust);
+}
+
+void thunderwave_travel(Entity *self)
+{
+	if (!self) return;
+	int mx = self->destinationx, my = self->destinationy;
+	Vector2D aimdir, camera, thrust;
+	mx += camera.x;
+	my += camera.y;
+	aimdir.x = mx - (self->position.x +50);
+	aimdir.y = my - (self->position.y +50);
+	vector2d_normalize(&aimdir);
+	vector2d_scale(thrust, aimdir, self->speed);
+	vector2d_add(self->velocity, self->velocity, thrust);
 }

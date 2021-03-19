@@ -63,6 +63,8 @@ Entity *thunderwave_spawn(int destinationx, int destinationy);
 
 void bullet_travel(Entity *self);
 
+void thunderwave_travel(Entity *self);
+
 void shotgun_spread(Entity *bullet1, Entity *bullet2, Entity *bullet3);
 
 #endif
