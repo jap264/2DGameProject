@@ -17,16 +17,50 @@ Entity *shooter_spawn(Vector2D position)
 		slog("failed to create entity for the shooter");
 		return NULL;
 	}
-	ent = ent;
 	ent->sprite = gf2d_sprite_load_image("images/e_shooter.png");
 	vector2d_copy(ent->position, position);
 	ent->update = shooter_update;
 	ent->think = shooter_think;
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
-	ent->speed = 1;
 	ent->health = 1;
-	return shooter->ent;
+	return ent;
+}
+
+Entity *pellet_spawn(Vector2D position)
+{
+	Entity *ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for the shooter");
+		return NULL;
+	}
+
+	Vector2D pos;
+	pos.x = position.x + 15;
+	pos.y = position.y + 15;
+
+	ent->sprite = gf2d_sprite_load_image("images/pellet.png");
+	vector2d_copy(ent->position, pos);
+	ent->speed = 4;
+	ent->health = 3;
+
+	Vector2D aimdir, thrust;
+	float angle;
+	int mx, my;
+
+	mx = get_player_entity()->position.x + 30;
+	my = get_player_entity()->position.y + 30;
+
+	aimdir.x = mx - (ent->position.x);
+	aimdir.y = my - (ent->position.y);
+
+	// turn aimdir into a unit vector
+	vector2d_normalize(&aimdir);
+	// check for motion
+
+	vector2d_scale(thrust, aimdir, ent->speed);
+	vector2d_add(ent->velocity, ent->velocity, thrust);
 }
 
 
@@ -43,7 +77,6 @@ void shooter_update(Entity *self)
 
 void shooter_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;
@@ -61,7 +94,8 @@ void shooter_think(Entity *self)
 	vector2d_normalize(&aimdir);
 	// check for motion
 
-	vector2d_scale(thrust, aimdir, self->speed);
+	vector2d_scale(thrust, aimdir, 1.2);
 	vector2d_add(self->velocity, self->velocity, thrust);
 
+	if (SDL_GetTicks() % 100 == 0) pellet_spawn(self->position);
 }

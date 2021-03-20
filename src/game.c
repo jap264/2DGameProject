@@ -13,6 +13,7 @@
 #include "rocket.h"
 #include "e_walker.h"
 #include "e_shooter.h"
+#include "e_shifty.h"
 
 int main(int argc, char * argv[])
 {
@@ -168,9 +169,26 @@ int main(int argc, char * argv[])
 				player->p_firerate = false;
 			}*/
 
-			if (keys[SDL_SCANCODE_RETURN] && SDL_GetTicks() % 100 == 0)
+			if (keys[SDL_SCANCODE_Y] && SDL_GetTicks() % 100 == 0)
 			{
-				shooter_spawn(vector2d(700,250));
+				walker_spawn(vector2d(700,250));
+			}
+			if (keys[SDL_SCANCODE_U] && SDL_GetTicks() % 100 == 0)
+			{
+				shooter_spawn(vector2d(700, 250));
+			}
+			if (keys[SDL_SCANCODE_I] && SDL_GetTicks() % 100 == 0)
+			{
+				shifty_spawn(vector2d(700, 250));
+			}
+			if (keys[SDL_SCANCODE_O] && SDL_GetTicks() % 100 == 0)
+			{
+				armored_spawn(vector2d(700, 250));
+			}
+
+			if (keys[SDL_SCANCODE_P] && SDL_GetTicks() % 100 == 0)
+			{
+				freeze_spawn(vector2d(700, 250));
 			}
 
 			gf2d_sprite_draw(

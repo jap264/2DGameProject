@@ -17,16 +17,14 @@ Entity *walker_spawn(Vector2D position)
 		slog("failed to create entity for the walker");
 		return NULL;
 	}
-	ent = ent;
 	ent->sprite = gf2d_sprite_load_image("images/e_walker.png");
 	vector2d_copy(ent->position, position);
 	ent->update = walker_update;
 	ent->think = walker_think;
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
-	ent->speed = 1;
 	ent->health = 1;
-	return walker->ent;
+	return ent;
 }
 
 
@@ -61,7 +59,7 @@ void walker_think(Entity *self)
 	vector2d_normalize(&aimdir);
 	// check for motion
 
-	vector2d_scale(thrust, aimdir, self->speed);
+	vector2d_scale(thrust, aimdir, 1.4);
 	vector2d_add(self->velocity, self->velocity, thrust);
 
 }
