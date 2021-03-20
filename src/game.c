@@ -11,6 +11,8 @@
 #include "entity.h"
 #include "level.h"
 #include "rocket.h"
+#include "e_walker.h"
+#include "e_shooter.h"
 
 int main(int argc, char * argv[])
 {
@@ -157,15 +159,19 @@ int main(int argc, char * argv[])
 				player->currWeapon = 10;
 			}
 
-			if (keys[SDL_SCANCODE_LSHIFT])
+			/*if (keys[SDL_SCANCODE_LSHIFT])
 			{
 				player->p_firerate = true;
 			}
 			if (keys[SDL_SCANCODE_RSHIFT])
 			{
 				player->p_firerate = false;
-			}
+			}*/
 
+			if (keys[SDL_SCANCODE_RETURN] && SDL_GetTicks() % 100 == 0)
+			{
+				shooter_spawn(vector2d(700,250));
+			}
 
 			gf2d_sprite_draw(
                 mouse,

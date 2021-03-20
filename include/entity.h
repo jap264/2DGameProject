@@ -26,6 +26,7 @@ typedef struct Entity_s
 	int			destinationy;
 	int			ttv; //time to live
 	int			speed;
+	int			health;
 
 }Entity;
 
