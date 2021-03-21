@@ -6,6 +6,7 @@
 #include "bullet.h"
 #include "rocket.h"
 #include "mine.h"
+#include "shape.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -43,12 +44,54 @@ Entity *player_spawn(Vector2D position)
 	player->maxHealth = 3;
 	player->health = player->maxHealth;
 	player->currWeapon = 1;
+	player->ent->ent_type = 0;
 	player->p_speed = false;
 	player->p_firerate = false;
 	player->p_invinc = false;
 	return player->ent;
 }
 
+void player_collide(Entity *other)
+{
+	if (!other) return;
+
+	slog("player collision");
+
+	//check if player projectile
+	if (other->ent_type == 1) return;
+
+	//check if powerup
+	else if (other->ent_type == 4)
+	{
+		//check type of powerup
+
+	}
+
+	//check if e_freeze
+	else if (other->ent_type == 5)
+	{
+
+	}
+	//check if enemy
+	else if (other->ent_type == 2)
+	{
+		//check if player is invincible
+		if (player->p_invinc == false) player->health--;
+		else slog("player is invincible and cannot take damage.");
+
+		//if (player->health == 0) player_die();
+
+		//free the entity of the enemy
+		entity_free(other);
+	
+	}
+	
+	//check if enemy projectile
+	else if (other->ent_type == 3)
+	{
+
+	}
+}
 
 void player_update(Entity *self)
 {
@@ -56,6 +99,9 @@ void player_update(Entity *self)
 	Vector2D cameraSize;
 
 	if (!self)return;
+	
+	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 5);
+	
 	cameraSize = camera_get_dimensions();
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);

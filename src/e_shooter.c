@@ -24,6 +24,7 @@ Entity *shooter_spawn(Vector2D position)
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
 	ent->health = 1;
+	ent->ent_type = 2;
 	return ent;
 }
 
@@ -43,7 +44,9 @@ Entity *pellet_spawn(Vector2D position)
 	ent->sprite = gf2d_sprite_load_image("images/pellet.png");
 	vector2d_copy(ent->position, pos);
 	ent->speed = 4;
-	ent->health = 3;
+	ent->health = 1;
+	ent->ent_type = 2;
+
 
 	Vector2D aimdir, thrust;
 	float angle;
@@ -82,11 +85,11 @@ void shooter_think(Entity *self)
 	int mx, my;
 	if (!self)return;
 	
-	mx = get_player_entity()->position.x + 30;
-	my = get_player_entity()->position.y + 30;
+	mx = get_player_entity()->position.x;
+	my = get_player_entity()->position.y;
 
-	aimdir.x = mx - (self->position.x);
-	aimdir.y = my - (self->position.y);
+	aimdir.x = mx - (self->position.x+32);
+	aimdir.y = my - (self->position.y+32);
 	angle = vector_angle(aimdir.x, aimdir.y);
 	self->rotation.z = angle + 90;
 

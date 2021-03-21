@@ -29,6 +29,7 @@ Entity *pistol_round_spawn(int destinationx, int destinationy)
 	ent->think = bullet_think;
 	ent->ttv = 200;
 	ent->speed = 2;
+	ent->ent_type = 1;
 	bullet_travel(ent);
 	return ent;
 }
@@ -52,6 +53,7 @@ Entity *light_round_spawn(int destinationx, int destinationy)
 	ent->think = bullet_think;
 	ent->ttv = 200;
 	ent->speed = 4;
+	ent->ent_type = 1;
 	bullet_travel(ent);
 	return ent;
 }
@@ -75,6 +77,7 @@ Entity *heavy_round_spawn(int destinationx, int destinationy)
 	ent->think = bullet_think;
 	ent->ttv = 200;
 	ent->speed = 6;
+	ent->ent_type = 1;
 	bullet_travel(ent);
 	return ent;
 }
@@ -98,6 +101,7 @@ Entity *sniper_round_spawn(int destinationx, int destinationy)
 	ent->think = bullet_think;
 	ent->ttv = 400;
 	ent->speed = 10;
+	ent->ent_type = 1;
 	bullet_travel(ent);
 	return ent;
 }
@@ -142,6 +146,10 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 	ent2->speed = 6;
 	ent3->speed = 6;
 
+	ent->ent_type = 1;
+	ent2->ent_type = 1;
+	ent3->ent_type = 1;
+
 	shotgun_spread(ent, ent2, ent3);
 }
 
@@ -164,6 +172,7 @@ Entity *thunderwave_spawn(int destinationx, int destinationy)
 	ent->think = bullet_think;
 	ent->ttv = 400;
 	ent->speed = 8;
+	ent->ent_type = 1;
 	thunderwave_travel(ent);
 	return ent;
 }

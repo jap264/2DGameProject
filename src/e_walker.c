@@ -24,6 +24,8 @@ Entity *walker_spawn(Vector2D position)
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
 	ent->health = 1;
+	ent->ent_type = 2;
+
 	return ent;
 }
 
@@ -31,6 +33,8 @@ Entity *walker_spawn(Vector2D position)
 void walker_update(Entity *self)
 {
 	if (!self)return;
+
+	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 5);
 
 	vector2d_scale(self->velocity, self->velocity, 0.75);
 	if (vector2d_magnitude_squared(self->velocity) < 2)

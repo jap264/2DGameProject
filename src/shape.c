@@ -24,10 +24,10 @@ ShapeRect shape_rect_from_vector4d(Vector4D v)
 	return sr;
 }
 
-//SDL_Rect shape_rect_to_sdl_rect(ShapeRect r)
-//{
-//	return gfc_sdl_rect(r.x, r.y, r.w, r.h);
-//}
+SDL_Rect shape_rect_to_sdl_rect(ShapeRect r)
+{
+	return gfc_sdl_rect(r.x, r.y, r.w, r.h);
+}
 
 /**
 * @brief check if the two circles have overlap
@@ -37,12 +37,14 @@ ShapeRect shape_rect_from_vector4d(Vector4D v)
 */
 Bool shape_circle_collision(ShapeCircle a, ShapeCircle b)
 {
+	if (!a.r || !b.r) return;
+
 	float radii2;
 	float c2;
-	radii2 = (a.r*a.r) + (b.r * b.r);
+	radii2 = (a.r + b.r) * (a.r + b.r);
 	c2 = ((a.x - b.x) * (a.x - b.x)) + ((a.y - b.y) * (a.y - b.y));
-	if (radii2 <= c2)return false;
-	return true;
+	if (c2 <= radii2) return true;
+	return false;
 }
 
 /**

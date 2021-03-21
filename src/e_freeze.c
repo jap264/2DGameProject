@@ -24,6 +24,7 @@ Entity *freeze_spawn(Vector2D position)
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
 	ent->health = 5;
+	ent->ent_type = 5;
 	return ent;
 }
 

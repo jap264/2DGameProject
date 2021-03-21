@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include "entity.h"
+#include "shape.h"
 
 typedef struct
 {
@@ -208,60 +209,19 @@ void follow(Entity *self, Entity *other, float speed)
 
 }
 
-void travel(Entity *self, int destinationx, int destinationy, float speed)
-{
-	if (!self) return;
-
-	if (self->position.y > destinationy)
-	{
-		self->position.y -= speed;
-		//slog("following -y");
-	}
-
-	if (self->position.y < destinationy)
-	{
-		self->position.y += speed;
-		//slog("following +y");
-	}
-	if (self->position.x > destinationx)
-	{
-		self->position.x -= speed;
-		//slog("following -x");
-	}
-
-	if (self->position.x < destinationx)
-	{
-		self->position.x += speed;
-		//slog("following +x");
-	}
-
-}
-
-Bool checkCollision(Entity *self, Entity *other)
-{
-	if (!self || !other) return false;
-
-	float distance_x = self->position.x - other->position.x;
-	float distance_y = self->position.y - other->position.y;
-
-	if (self->radius == 0 || other->radius == 0) return false;
-	//slog("%f, %f", self->radius, other->radius);
-
-	float radii_sum = self->radius + other->radius;
-
-	if ((distance_x * distance_x) + (distance_y * distance_y) <= (radii_sum * radii_sum)) return true;
-
-	return false;
-}
-
 void check_all_collisions()
 {
+	//if (SDL_GetTicks() % 100 == 0) slog("checking collisions");
+
 	for (int i = 0; i < entity_manager.max_entities; i++)
 	{
 		if (!entity_manager.entity_list[i]._inuse) continue;
 
+		if (SDL_GetTicks() % 100 == 0) slog("ent type: %i", entity_manager.entity_list[i].ent_type);
+
 		for (int x = 0; x < entity_manager.max_entities; x++)
 		{
+			if (!entity_manager.entity_list[x]._inuse) continue;
 			if (&entity_manager.entity_list[x] == &entity_manager.entity_list[i]) continue;
 			if (!&entity_manager.entity_list[x] || !&entity_manager.entity_list[i])
 			{
@@ -269,9 +229,31 @@ void check_all_collisions()
 				continue;
 			}
 
-			if (checkCollision(&entity_manager.entity_list[x], &entity_manager.entity_list[i]))
+			if (shape_circle_collision(entity_manager.entity_list[x].circle, entity_manager.entity_list[i].circle) == true)
 			{
-				slog("collision");
+				slog("x: %i, i: %i", entity_manager.entity_list[x].ent_type, entity_manager.entity_list[i].ent_type);
+				
+				if (entity_manager.entity_list[x].ent_type == 0) //first entity is player
+				{
+					slog("x is the player");
+					player_collide(&entity_manager.entity_list[i]);
+				}
+
+				else if (entity_manager.entity_list[i].ent_type == 0) //second entity is the player
+				{
+					slog("i is the player");
+					player_collide(&entity_manager.entity_list[x]);
+				}
+
+				else if (entity_manager.entity_list[x].ent_type == 2 && entity_manager.entity_list[x].ent_type == 2)
+				{
+					slog("two enemies are touching");
+					continue;
+				}
+
+				else if (entity_manager.entity_list[x].ent_type == 4 || //ignore collisions between powerups vs. other powerups & enemies
+				entity_manager.entity_list[i].ent_type == 4) continue;
+
 			}
 		}
 	}

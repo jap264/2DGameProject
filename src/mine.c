@@ -24,6 +24,7 @@ Entity *mine_spawn()
 	ent->update = mine_update;
 	ent->think = mine_think;
 	ent->ttv = 400;
+	ent->ent_type = 1;
 
 	return ent;
 }
@@ -40,6 +41,7 @@ Entity *mine_explosion_spawn(Vector2D position)
 	ent->sprite = gf2d_sprite_load_image("images/explosion_small.png");
 	ent->position = position;
 	ent->ttv = 100;
+	ent->ent_type = 1;
 
 	return ent;
 }

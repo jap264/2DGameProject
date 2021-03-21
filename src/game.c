@@ -79,12 +79,12 @@ int main(int argc, char * argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
-		//if (SDL_GetTicks() % 10000) slog("%i, %i", mx, my);
         /*mf+=0.1;
         if (mf >= 16.0)mf = 0;*/
         
 		entity_manager_think_entities();
 		entity_manager_update_entities();
+		check_all_collisions();
 
 		level_update(level);
         
@@ -160,33 +160,24 @@ int main(int argc, char * argv[])
 				player->currWeapon = 10;
 			}
 
-			/*if (keys[SDL_SCANCODE_LSHIFT])
-			{
-				player->p_firerate = true;
-			}
-			if (keys[SDL_SCANCODE_RSHIFT])
-			{
-				player->p_firerate = false;
-			}*/
-
-			if (keys[SDL_SCANCODE_Y] && SDL_GetTicks() % 100 == 0)
+			if (keys[SDL_SCANCODE_Y] && SDL_GetTicks() % 50 == 0)
 			{
 				walker_spawn(vector2d(700,250));
 			}
-			if (keys[SDL_SCANCODE_U] && SDL_GetTicks() % 100 == 0)
+			if (keys[SDL_SCANCODE_U] && SDL_GetTicks() % 50 == 0)
 			{
 				shooter_spawn(vector2d(700, 250));
 			}
-			if (keys[SDL_SCANCODE_I] && SDL_GetTicks() % 100 == 0)
+			if (keys[SDL_SCANCODE_I] && SDL_GetTicks() % 50 == 0)
 			{
 				shifty_spawn(vector2d(700, 250));
 			}
-			if (keys[SDL_SCANCODE_O] && SDL_GetTicks() % 100 == 0)
+			if (keys[SDL_SCANCODE_O] && SDL_GetTicks() % 50 == 0)
 			{
 				armored_spawn(vector2d(700, 250));
 			}
 
-			if (keys[SDL_SCANCODE_P] && SDL_GetTicks() % 100 == 0)
+			if (keys[SDL_SCANCODE_P] && SDL_GetTicks() % 50 == 0)
 			{
 				freeze_spawn(vector2d(700, 250));
 			}

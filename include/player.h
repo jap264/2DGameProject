@@ -6,6 +6,7 @@
 
 #include "entity.h"
 #include "gfc_types.h"
+#include "shape.h"
 
 typedef struct Player_S
 {
@@ -31,9 +32,14 @@ Entity *player_spawn(Vector2D position);
 
 /*
 *	@brief checks what the player collided with and respond accordingly
-*	@param other sthe entity the player collided with
+*	@param other the entity the player collided with
 */
 void player_collide(Entity *other);
+
+/*
+*	@brief player has lost all health
+*/
+void player_die();
 
 /*
 *	@brief returns the player's entity

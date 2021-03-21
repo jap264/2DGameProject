@@ -27,6 +27,7 @@ Entity *grenade_spawn(int destinationx, int destinationy)
 	ent->think = grenade_think;
 	ent->ttv = 200;
 	ent->speed = 2;
+	ent->ent_type = 1;
 	grenade_travel(ent);
 	return ent;
 }
@@ -46,6 +47,7 @@ Entity *grenade_explosion_spawn(Vector2D position)
 	spawn.y = position.y - 20;
 	ent->position = spawn;
 	ent->ttv = 100;
+	ent->ent_type = 1;
 
 	return ent;
 }

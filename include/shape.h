@@ -21,6 +21,8 @@ ShapeRect shape_rect_from_sdl_rect(SDL_Rect r);
 ShapeRect shape_rect_from_vector4d(Vector4D v);
 SDL_Rect shape_rect_to_sdl_rect(ShapeRect r);
 
+ShapeCircle shape_circle(float x, float y, float r);
+
 /**
 * @brief check if the two circles have overlap
 * @param a the first circle to check

@@ -4,6 +4,7 @@
 #include "gfc_types.h"
 #include "gfc_vector.h"
 #include "gf2d_sprite.h"
+#include "shape.h"
 
 typedef struct Entity_s
 {
@@ -12,6 +13,7 @@ typedef struct Entity_s
 	Vector2D    velocity;
 	Vector3D    rotation; //(x,y) = rotation center, z = degrees of rotation
 	Sprite     *sprite;
+	ShapeCircle	circle;
 	float       frame;
 	float       frameRate;
 	int         frameCount;
@@ -20,8 +22,7 @@ typedef struct Entity_s
 	void		(*draw)(struct Entity_s *self);
 	void		(*free)(struct Entity_s *self);
 	void       *data;
-	int			ent_type;
-	int			radius;
+	int			ent_type; //0 = player, 1 = player projectiles, 2 = enemies, 3 = enemy projectiles, 4 = powerups, 5 = e_freeze
 	int			destinationx;
 	int			destinationy;
 	int			ttv;	//time to live
@@ -82,22 +83,6 @@ void entity_draw(Entity *ent);
 *	@param speed distance to move every frame
 */
 void follow(Entity *self, Entity *other, float speed);
-
-/*
-*	@brief makes an entity travel to a 2d space
-*	@param self entity that is following
-*	@param destinationx location (x) to travel to
-*	@param destinationy location (y) to travel to
-*	@param speed distance to move every frame
-*/
-void travel(Entity *self, int destinationx, int destinationy, float speed);
-
-/*
-*	@brief checks collision with another entity
-*	@param self first entity
-*	@param other second entity
-*/
-Bool checkCollision(Entity *self, Entity *other);
 
 /*
 *	@brief checks collisions between all entities

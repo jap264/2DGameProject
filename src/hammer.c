@@ -26,6 +26,7 @@ Entity *ground_pound_spawn()
 	ent->update = hammer_update;
 	ent->think = hammer_think;
 	ent->ttv = 100;
+	ent->ent_type = 1;
 
 	return ent;
 }

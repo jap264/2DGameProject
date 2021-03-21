@@ -35,6 +35,7 @@ Entity *rocket_spawn()
 	rocket->ent->think = rocket_think;
 	rocket->ent->ttv = 500;
 	rocket->ent->speed = 4;
+	ent->ent_type = 1;
 	rocket->alive = true;
 
 	return rocket->ent;
@@ -53,6 +54,7 @@ Entity *explosion_spawn(Vector2D position)
 	rocket->explosion->sprite = gf2d_sprite_load_image("images/explosion_large.png");
 	rocket->explosion->position = position;
 	rocket->explosion->ttv = 100;
+	ent->ent_type = 1;
 
 	return rocket->explosion;
 }
