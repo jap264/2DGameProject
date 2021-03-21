@@ -21,6 +21,7 @@ static int thunderDelay = 0;
 static int grenadeDelay = 0;
 static int mineDelay = 0;
 static int hammerDelay = 0;
+static int frozenDelay = 0;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -49,6 +50,7 @@ Entity *player_spawn(Vector2D position)
 	player->p_speed = false;
 	player->p_firerate = false;
 	player->p_invinc = false;
+	player->frozen = false;
 	return player->ent;
 }
 
@@ -73,7 +75,15 @@ void player_collide(Entity *self, Entity *other)
 	//check if e_freeze
 	else if (other->ent_type == 5)
 	{
+		if (player->p_invinc == false)
+		{
+			player->frozen = true;
+			frozenDelay = 300;
+			slog("freeze");
+		}
+		else slog("player is invincible and cannot take damage.");
 
+		entity_free(other);
 	}
 
 	//check if enemy projectile
@@ -113,6 +123,13 @@ void player_update(Entity *self)
 	
 	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 32);
 	
+	if (frozenDelay > 0) frozenDelay--;
+	if (frozenDelay <= 0) player->frozen = false;
+
+	if (player->p_speed == true) self->speed = 6;
+	else if (player->frozen == true) self->speed = 1;
+	else self->speed = 3;
+
 	cameraSize = camera_get_dimensions();
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
@@ -141,9 +158,6 @@ void player_think(Entity *self)
 	aimdir.y = my - (self->position.y + 64);
 	angle = vector_angle(aimdir.x, aimdir.y);
 	self->rotation.z = angle + 90;
-
-	if (player->p_speed == true) self->speed = 6;
-	else self->speed = 3;
 
 	// turn aimdir into a unit vector
 	vector2d_normalize(&aimdir);

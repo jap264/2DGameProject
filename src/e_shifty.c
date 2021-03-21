@@ -6,7 +6,7 @@
 
 void shifty_update(Entity *self);
 void shifty_think(Entity *self);
-
+void shifty_collide(Entity *self);
 static Shifty *shifty = { 0 };
 static int randNum();
 
@@ -22,6 +22,7 @@ Entity *shifty_spawn(Vector2D position)
 	vector2d_copy(ent->position, position);
 	ent->update = shifty_update;
 	ent->think = shifty_think;
+	ent->collide = shifty_collide;
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
 	ent->health = 5;
@@ -29,10 +30,24 @@ Entity *shifty_spawn(Vector2D position)
 	return ent;
 }
 
+void shifty_collide(Entity *self, Entity *other)
+{
+	if (!self || !other) return;
+
+	if (other->ent_type == 1)
+	{
+		if (other->dmg != NULL) self->health -= other->dmg;
+		entity_free(other);
+	}
+
+	if (self->health <= 0 || other->ent_type == 6) entity_free(self);
+}
 
 void shifty_update(Entity *self)
 {
 	if (!self)return;
+
+	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 16);
 
 	vector2d_scale(self->velocity, self->velocity, 0.75);
 	if (vector2d_magnitude_squared(self->velocity) < 2)

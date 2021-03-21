@@ -7,6 +7,7 @@
 
 void grenade_update(Entity *self);
 void grenade_think(Entity *self);
+void grenade_explosion_update(Entity *self);
 
 Entity *grenade_spawn(int destinationx, int destinationy)
 {
@@ -23,7 +24,6 @@ Entity *grenade_spawn(int destinationx, int destinationy)
 	vector2d_copy(ent->position, spawn);
 	ent->destinationx = destinationx;
 	ent->destinationy = destinationy;
-	ent->update = grenade_update;
 	ent->think = grenade_think;
 	ent->ttv = 200;
 	ent->speed = 2;
@@ -43,38 +43,26 @@ Entity *grenade_explosion_spawn(Vector2D position)
 
 	ent->sprite = gf2d_sprite_load_image("images/explosion_large.png");
 	Vector2D spawn;
-	spawn.x = position.x - 20;
-	spawn.y = position.y - 20;
+	spawn.x = position.x - 24;
+	spawn.y = position.y - 24;
 	ent->position = spawn;
 	ent->ttv = 100;
-	ent->ent_type = 1;
+	ent->ent_type = 6;
+	ent->update = grenade_explosion_update;
 
 	return ent;
 }
 
-void grenade_update(Entity *self)
+void grenade_explosion_update(Entity *self)
 {
-	//Vector2D camera;
-	//Vector2D cameraSize;
-
-	//if (!self)return;
-	//cameraSize = camera_get_dimensions();
-	//camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
-	//camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
-	//camera_set_position(camera);
-	// apply dampening on velocity
-	//vector2d_scale(self->velocity, self->velocity, 0.75);
-	//if (vector2d_magnitude_squared(self->velocity) < 2)
-	//{
-	//	vector2d_clear(self->velocity);
-	//}
+	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 16);
 }
 
 void grenade_think(Entity *self)
 {
 	if (!self) return;
 	
-	if (self->ttv == 50) vector2d_clear(self->velocity);
+	if (self->ttv == 100) vector2d_clear(self->velocity);
 	if (self->ttv == 1) grenade_explosion_spawn(self->position);
 }
 

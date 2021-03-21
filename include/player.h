@@ -11,7 +11,6 @@
 typedef struct Player_S
 {
 	Entity *ent;
-	int health;
 	int maxHealth;
 	int status; //alive or dead
 	int points;
@@ -20,6 +19,7 @@ typedef struct Player_S
 	Bool p_speed;
 	Bool p_firerate;
 	Bool p_invinc;
+	Bool frozen;
 
 }Player;
 

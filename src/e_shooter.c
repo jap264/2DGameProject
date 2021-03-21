@@ -7,6 +7,7 @@
 void shooter_update(Entity *self);
 void pellet_update(Entity *self);
 void shooter_think(Entity *self);
+void pellet_collide(Entity *self);
 
 static Shooter *shooter = { 0 };
 
@@ -49,6 +50,7 @@ Entity *pellet_spawn(Vector2D position)
 	ent->speed = 4;
 	ent->ent_type = 3;
 	ent->update = pellet_update;
+	ent->collide = pellet_collide;
 
 
 	Vector2D aimdir, thrust;
@@ -100,16 +102,15 @@ void pellet_update(Entity *self)
 	self->circle = shape_circle(self->position.x + 16, self->position.y + 16, 12);
 }
 
-//void pellet_collide(Entity *self, Entity *other)
-//{
-//	if (!self || !other) return;
-//
-//	if (other->ent_type == 0)
-//	{
-//		other->health--;
-//		entity_free(self);
-//	}
-//}
+void pellet_collide(Entity *self, Entity *other)
+{
+	if (!self || !other) return;
+
+	if (other->ent_type == 6)
+	{
+		entity_free(self);
+	}
+}
 
 void shooter_think(Entity *self)
 {

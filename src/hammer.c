@@ -26,7 +26,7 @@ Entity *ground_pound_spawn()
 	ent->update = hammer_update;
 	ent->think = hammer_think;
 	ent->ttv = 100;
-	ent->ent_type = 1;
+	ent->ent_type = 6;
 
 	return ent;
 }
@@ -34,6 +34,7 @@ Entity *ground_pound_spawn()
 void hammer_update(Entity *self)
 {
 	if (!self) return;
+	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 64);
 }
 
 void hammer_think(Entity *self)

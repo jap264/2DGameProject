@@ -7,6 +7,8 @@
 
 void mine_update(Entity *self);
 void mine_think(Entity *self);
+void mine_collide(Entity *self);
+void mine_explosion_update(Entity *self);
 
 Entity *mine_spawn()
 {
@@ -23,7 +25,8 @@ Entity *mine_spawn()
 	vector2d_copy(ent->position, spawn);
 	ent->update = mine_update;
 	ent->think = mine_think;
-	ent->ttv = 400;
+	ent->collide = mine_collide;
+	ent->ttv = 1000;
 	ent->ent_type = 1;
 
 	return ent;
@@ -40,28 +43,32 @@ Entity *mine_explosion_spawn(Vector2D position)
 
 	ent->sprite = gf2d_sprite_load_image("images/explosion_small.png");
 	ent->position = position;
+	ent->update = mine_explosion_update;
+
 	ent->ttv = 100;
-	ent->ent_type = 1;
+	ent->ent_type = 6;
 
 	return ent;
 }
 
+void mine_collide(Entity *self, Entity *other)
+{
+	if (!self || !other) return;
+
+	if (other->ent_type != 2) return;
+
+	entity_free(self);
+	mine_explosion_spawn(self->position);
+}
+
 void mine_update(Entity *self)
 {
-	//Vector2D camera;
-	//Vector2D cameraSize;
+	self->circle = shape_circle(self->position.x + 16, self->position.y + 16, 8);
+}
 
-	//if (!self)return;
-	//cameraSize = camera_get_dimensions();
-	//camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
-	//camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
-	//camera_set_position(camera);
-	// apply dampening on velocity
-	//vector2d_scale(self->velocity, self->velocity, 0.75);
-	//if (vector2d_magnitude_squared(self->velocity) < 2)
-	//{
-	//	vector2d_clear(self->velocity);
-	//}
+void mine_explosion_update(Entity *self)
+{
+	self->circle = shape_circle(self->position.x + 16, self->position.y + 16, 8);
 }
 
 void mine_think(Entity *self)
