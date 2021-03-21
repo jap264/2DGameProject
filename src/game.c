@@ -65,12 +65,6 @@ int main(int argc, char * argv[])
 	//Weapon Init
 	rocket_init();
 
-	//Health UI
-	if (get_player_health() == 3) health = gf2d_sprite_load_image("images/full_health.png");
-	else if (get_player_health() == 2) health = gf2d_sprite_load_image("images/half_health.png");
-	else if (get_player_health() == 1) health = gf2d_sprite_load_image("images/low_health.png");
-	else health = gf2d_sprite_load_image("images/no_health.png");
-
 	slog("main game loop begin");
     /*main game loop*/
     while(!done)
@@ -192,6 +186,12 @@ int main(int argc, char * argv[])
                 &mouseColor,
                 (int)mf
 			);
+
+			//Health UI
+			if (get_player_health() == 3) health = gf2d_sprite_load_image("images/full_health.png");
+			else if (get_player_health() == 2) health = gf2d_sprite_load_image("images/half_health.png");
+			else if (get_player_health() == 1) health = gf2d_sprite_load_image("images/low_health.png");
+			else health = gf2d_sprite_load_image("images/no_health.png");
 
 			gf2d_sprite_draw(
 				health,

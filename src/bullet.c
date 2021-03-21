@@ -6,7 +6,7 @@
 #include "bullet.h"
 
 void bullet_update(Entity *self);
-void bullet_think(Entity *self);
+void thunderwave_update(Entity *self);
 void bullet_travel(Entity *self);
 void shotgun_spread(Entity *bullet1, Entity *bullet2, Entity *bullet3);
 
@@ -26,8 +26,8 @@ Entity *pistol_round_spawn(int destinationx, int destinationy)
 	ent->destinationx = destinationx;
 	ent->destinationy = destinationy;
 	ent->update = bullet_update;
-	ent->think = bullet_think;
-	ent->ttv = 200;
+	ent->dmg = 3;
+	ent->ttv = 400;
 	ent->speed = 2;
 	ent->ent_type = 1;
 	bullet_travel(ent);
@@ -50,10 +50,10 @@ Entity *light_round_spawn(int destinationx, int destinationy)
 	ent->destinationx = destinationx;
 	ent->destinationy = destinationy;
 	ent->update = bullet_update;
-	ent->think = bullet_think;
-	ent->ttv = 200;
+	ent->ttv = 400;
 	ent->speed = 4;
 	ent->ent_type = 1;
+	ent->dmg = 2;
 	bullet_travel(ent);
 	return ent;
 }
@@ -74,10 +74,10 @@ Entity *heavy_round_spawn(int destinationx, int destinationy)
 	ent->destinationx = destinationx;
 	ent->destinationy = destinationy;
 	ent->update = bullet_update;
-	ent->think = bullet_think;
 	ent->ttv = 200;
 	ent->speed = 6;
 	ent->ent_type = 1;
+	ent->dmg = 1;
 	bullet_travel(ent);
 	return ent;
 }
@@ -98,10 +98,10 @@ Entity *sniper_round_spawn(int destinationx, int destinationy)
 	ent->destinationx = destinationx;
 	ent->destinationy = destinationy;
 	ent->update = bullet_update;
-	ent->think = bullet_think;
 	ent->ttv = 400;
 	ent->speed = 10;
 	ent->ent_type = 1;
+	ent->dmg = 10;
 	bullet_travel(ent);
 	return ent;
 }
@@ -136,7 +136,8 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 	ent->destinationy = destinationy;
 	
 	ent->update = bullet_update;
-	ent->think = bullet_think;
+	ent2->update = bullet_update;
+	ent3->update = bullet_update;
 	
 	ent->ttv = 200;
 	ent2->ttv = 200;
@@ -149,6 +150,11 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 	ent->ent_type = 1;
 	ent2->ent_type = 1;
 	ent3->ent_type = 1;
+
+	ent->dmg = 2;
+	ent2->dmg = 2;
+	ent3->dmg = 2;
+
 
 	shotgun_spread(ent, ent2, ent3);
 }
@@ -168,36 +174,22 @@ Entity *thunderwave_spawn(int destinationx, int destinationy)
 	vector2d_copy(ent->position, spawn);
 	ent->destinationx = destinationx;
 	ent->destinationy = destinationy;
-	ent->update = bullet_update;
-	ent->think = bullet_think;
+	ent->update = thunderwave_update;
 	ent->ttv = 400;
 	ent->speed = 8;
-	ent->ent_type = 1;
+	ent->ent_type = 6;
 	thunderwave_travel(ent);
 	return ent;
 }
 
-void bullet_update(Entity *self)
+void thunderwave_update(Entity *self)
 {
-	//Vector2D camera;
-	//Vector2D cameraSize;
-
-	//if (!self)return;
-	//cameraSize = camera_get_dimensions();
-	//camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
-	//camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
-	//camera_set_position(camera);
-	// apply dampening on velocity
-	//vector2d_scale(self->velocity, self->velocity, 0.75);
-	//if (vector2d_magnitude_squared(self->velocity) < 2)
-	//{
-	//	vector2d_clear(self->velocity);
-	//}
+	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 32);
 }
 
-void bullet_think(Entity *self)
+void bullet_update(Entity *self)
 {
-	if (!self) return;	
+	self->circle = shape_circle(self->position.x + 16, self->position.y + 16, 8);
 }
 
 void bullet_travel(Entity *self)

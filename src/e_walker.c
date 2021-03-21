@@ -21,20 +21,33 @@ Entity *walker_spawn(Vector2D position)
 	vector2d_copy(ent->position, position);
 	ent->update = walker_update;
 	ent->think = walker_think;
+	ent->collide = walker_collide;
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
-	ent->health = 1;
+	ent->health = 3;
 	ent->ent_type = 2;
 
 	return ent;
 }
 
+void walker_collide(Entity *self, Entity *other)
+{
+	if (!self || !other) return;
+	
+	if (other->ent_type == 1)
+	{
+		if (other->dmg != NULL) self->health -= other->dmg;
+		entity_free(other);
+	}
+
+	if (self->health <= 0 || other->ent_type == 6) entity_free(self);
+}
 
 void walker_update(Entity *self)
 {
 	if (!self)return;
 
-	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 5);
+	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 16);
 
 	vector2d_scale(self->velocity, self->velocity, 0.75);
 	if (vector2d_magnitude_squared(self->velocity) < 2)

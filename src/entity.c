@@ -217,7 +217,7 @@ void check_all_collisions()
 	{
 		if (!entity_manager.entity_list[i]._inuse) continue;
 
-		if (SDL_GetTicks() % 100 == 0) slog("ent type: %i", entity_manager.entity_list[i].ent_type);
+		//if (SDL_GetTicks() % 100 == 0) slog("ent type: %i", entity_manager.entity_list[i].ent_type);
 
 		for (int x = 0; x < entity_manager.max_entities; x++)
 		{
@@ -231,29 +231,11 @@ void check_all_collisions()
 
 			if (shape_circle_collision(entity_manager.entity_list[x].circle, entity_manager.entity_list[i].circle) == true)
 			{
-				slog("x: %i, i: %i", entity_manager.entity_list[x].ent_type, entity_manager.entity_list[i].ent_type);
-				
-				if (entity_manager.entity_list[x].ent_type == 0) //first entity is player
-				{
-					slog("x is the player");
-					player_collide(&entity_manager.entity_list[i]);
-				}
+				if (entity_manager.entity_list[x].collide != NULL)
+					entity_manager.entity_list[x].collide(&entity_manager.entity_list[x] , & entity_manager.entity_list[i]);
 
-				else if (entity_manager.entity_list[i].ent_type == 0) //second entity is the player
-				{
-					slog("i is the player");
-					player_collide(&entity_manager.entity_list[x]);
-				}
-
-				else if (entity_manager.entity_list[x].ent_type == 2 && entity_manager.entity_list[x].ent_type == 2)
-				{
-					slog("two enemies are touching");
-					continue;
-				}
-
-				else if (entity_manager.entity_list[x].ent_type == 4 || //ignore collisions between powerups vs. other powerups & enemies
-				entity_manager.entity_list[i].ent_type == 4) continue;
-
+				if (entity_manager.entity_list[i].collide != NULL)
+					entity_manager.entity_list[i].collide(&entity_manager.entity_list[i], &entity_manager.entity_list[x]);
 			}
 		}
 	}

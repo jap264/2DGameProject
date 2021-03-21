@@ -38,11 +38,12 @@ Entity *player_spawn(Vector2D position)
 	player->ent->frameCount = 16;
 	player->ent->update = player_update;
 	player->ent->think = player_think;
+	player->ent->collide = player_collide;
 	player->ent->rotation.x = 64;
 	player->ent->rotation.y = 64;
 	player->ent->speed = 3;
 	player->maxHealth = 3;
-	player->health = player->maxHealth;
+	player->ent->health = player->maxHealth;
 	player->currWeapon = 1;
 	player->ent->ent_type = 0;
 	player->p_speed = false;
@@ -51,17 +52,19 @@ Entity *player_spawn(Vector2D position)
 	return player->ent;
 }
 
-void player_collide(Entity *other)
+void player_collide(Entity *self, Entity *other)
 {
-	if (!other) return;
+	if (!self || !other) return;
 
-	slog("player collision");
+	//ignore player projectiles
+	if (other->ent_type == 1 
+		|| other->ent_type == 0 
+		|| other->ent_type == 6) return;
 
-	//check if player projectile
-	if (other->ent_type == 1) return;
-
+	slog("p_collision, ent type: %i", other->ent_type);
+	
 	//check if powerup
-	else if (other->ent_type == 4)
+	if (other->ent_type == 4)
 	{
 		//check type of powerup
 
@@ -72,24 +75,32 @@ void player_collide(Entity *other)
 	{
 
 	}
+
+	//check if enemy projectile
+	else if (other->ent_type == 3)
+	{
+		// check if player is invincible
+		if (player->p_invinc == false) player->ent->health--;
+		else slog("player is invincible and cannot take damage.");
+
+		//if (player->health <0= 0) player_die();
+
+		//free the entity of the projectile
+		entity_free(other);
+	}
+
 	//check if enemy
 	else if (other->ent_type == 2)
 	{
 		//check if player is invincible
-		if (player->p_invinc == false) player->health--;
+		if (player->p_invinc == false) player->ent->health--;
 		else slog("player is invincible and cannot take damage.");
 
-		//if (player->health == 0) player_die();
+		//if (player->health <= 0) player_die();
 
 		//free the entity of the enemy
 		entity_free(other);
 	
-	}
-	
-	//check if enemy projectile
-	else if (other->ent_type == 3)
-	{
-
 	}
 }
 
@@ -100,7 +111,7 @@ void player_update(Entity *self)
 
 	if (!self)return;
 	
-	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 5);
+	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 32);
 	
 	cameraSize = camera_get_dimensions();
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
@@ -286,5 +297,5 @@ Player *get_player()
 
 int *get_player_health()
 {
-	return player->health;
+	return player->ent->health;
 }

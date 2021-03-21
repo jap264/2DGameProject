@@ -5,6 +5,7 @@
 #include "entity.h"
 
 void shooter_update(Entity *self);
+void pellet_update(Entity *self);
 void shooter_think(Entity *self);
 
 static Shooter *shooter = { 0 };
@@ -21,9 +22,11 @@ Entity *shooter_spawn(Vector2D position)
 	vector2d_copy(ent->position, position);
 	ent->update = shooter_update;
 	ent->think = shooter_think;
+	ent->collide = shooter_collide;
+
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
-	ent->health = 1;
+	ent->health = 6;
 	ent->ent_type = 2;
 	return ent;
 }
@@ -38,25 +41,25 @@ Entity *pellet_spawn(Vector2D position)
 	}
 
 	Vector2D pos;
-	pos.x = position.x + 15;
-	pos.y = position.y + 15;
+	pos.x = position.x + 16;
+	pos.y = position.y + 16;
 
 	ent->sprite = gf2d_sprite_load_image("images/pellet.png");
 	vector2d_copy(ent->position, pos);
 	ent->speed = 4;
-	ent->health = 1;
-	ent->ent_type = 2;
+	ent->ent_type = 3;
+	ent->update = pellet_update;
 
 
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;
 
-	mx = get_player_entity()->position.x + 30;
-	my = get_player_entity()->position.y + 30;
+	mx = get_player_entity()->position.x + 64;
+	my = get_player_entity()->position.y + 64;
 
-	aimdir.x = mx - (ent->position.x);
-	aimdir.y = my - (ent->position.y);
+	aimdir.x = mx - (ent->position.x + 16);
+	aimdir.y = my - (ent->position.y + 16);
 
 	// turn aimdir into a unit vector
 	vector2d_normalize(&aimdir);
@@ -66,10 +69,24 @@ Entity *pellet_spawn(Vector2D position)
 	vector2d_add(ent->velocity, ent->velocity, thrust);
 }
 
+void shooter_collide(Entity *self, Entity *other)
+{
+	if (!self || !other) return;
+
+	if (other->ent_type == 1)
+	{
+		if (other->dmg != NULL) self->health -= other->dmg;
+		entity_free(other);
+	}
+
+	if (self->health <= 0 || other->ent_type == 6) entity_free(self);
+}
 
 void shooter_update(Entity *self)
 {
 	if (!self)return;
+
+	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 16);
 
 	vector2d_scale(self->velocity, self->velocity, 0.75);
 	if (vector2d_magnitude_squared(self->velocity) < 2)
@@ -78,6 +95,22 @@ void shooter_update(Entity *self)
 	}
 }
 
+void pellet_update(Entity *self)
+{
+	self->circle = shape_circle(self->position.x + 16, self->position.y + 16, 12);
+}
+
+//void pellet_collide(Entity *self, Entity *other)
+//{
+//	if (!self || !other) return;
+//
+//	if (other->ent_type == 0)
+//	{
+//		other->health--;
+//		entity_free(self);
+//	}
+//}
+
 void shooter_think(Entity *self)
 {
 	Vector2D aimdir, thrust;
@@ -85,11 +118,11 @@ void shooter_think(Entity *self)
 	int mx, my;
 	if (!self)return;
 	
-	mx = get_player_entity()->position.x;
-	my = get_player_entity()->position.y;
+	mx = get_player_entity()->position.x + 64;
+	my = get_player_entity()->position.y + 64;
 
-	aimdir.x = mx - (self->position.x+32);
-	aimdir.y = my - (self->position.y+32);
+	aimdir.x = mx - (self->position.x + 16);
+	aimdir.y = my - (self->position.y + 16);
 	angle = vector_angle(aimdir.x, aimdir.y);
 	self->rotation.z = angle + 90;
 
