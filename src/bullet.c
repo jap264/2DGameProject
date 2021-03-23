@@ -6,7 +6,7 @@
 #include "bullet.h"
 
 void bullet_update(Entity *self);
-void bullet_collide(Entity *self);
+void bullet_collide(Entity *self, Entity *other);
 void thunderwave_update(Entity *self);
 void bullet_travel(Entity *self);
 void shotgun_spread(Entity *bullet1, Entity *bullet2, Entity *bullet3);
@@ -229,9 +229,24 @@ void bullet_update(Entity *self)
 void bullet_collide(Entity *self, Entity *other)
 {
 	if (!self) return;
-	if (other->ent_type == 7 || other->ent_type == 8)
+	if (other->ent_type == 7)
 	{
+		Vector2D aimdir, thrust;
+		float angle;
+		int mx, my;
 
+		mx = get_player_entity()->position.x + 64;
+		my = get_player_entity()->position.y + 64;
+
+		aimdir.x = mx - (self->position.x + 16);
+		aimdir.y = my - (self->position.y + 16);
+
+		// turn aimdir into a unit vector
+		vector2d_normalize(&aimdir);
+		// check for motion
+
+		vector2d_scale(thrust, aimdir, self->speed);
+		vector2d_add(self->velocity, self->velocity, thrust);
 	}
 }
 

@@ -90,7 +90,7 @@ void shifty_think(Entity *self)
 	vector2d_add(self->velocity, self->velocity, thrust);
 
 
-	if (SDL_GetTicks() % 400 == 0)
+	if (SDL_GetTicks() % 100 == 0)
 	{
 		int num = randNum();
 

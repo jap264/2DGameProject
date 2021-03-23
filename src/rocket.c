@@ -100,9 +100,9 @@ void rocket_think(Entity *self)
 	if (!self)return;
 	keys = SDL_GetKeyboardState(NULL);
 	SDL_GetMouseState(&mx, &my);
-	camera = camera_get_position();
+	/*camera = camera_get_position();
 	mx += camera.x;
-	my += camera.y;
+	my += camera.y;*/
 	aimdir.x = mx - (self->position.x); //where its going to
 	aimdir.y = my - (self->position.y);
 	angle = vector_angle(aimdir.x, aimdir.y);

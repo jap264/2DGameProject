@@ -155,25 +155,14 @@ void player_collide(Entity *self, Entity *other)
 		entity_free(other);
 	}
 
-	//check if enemy projectile
-	else if (other->ent_type == 3)
+	//check if enemy, enemy projectile, or minion
+	else if (other->ent_type == 2 || other->ent_type == 3 || other->ent_type == 9)
 	{
 		// check if player is invincible
 		if (player->p_invinc == false) player->ent->health--;
 		else slog("player is invincible and cannot take damage.");
 
 		//free the entity of the projectile
-		entity_free(other);
-	}
-
-	//check if enemy
-	else if (other->ent_type == 2)
-	{
-		//check if player is invincible
-		if (player->p_invinc == false) player->ent->health--;
-		else slog("player is invincible and cannot take damage.");
-
-		//free the entity of the enemy
 		entity_free(other);
 	}
 

@@ -188,6 +188,11 @@ int main(int argc, char * argv[])
 				boss_melee_spawn(vector2d(700, 250));
 			}
 
+			if (keys[SDL_SCANCODE_RIGHTBRACKET] && SDL_GetTicks() % 50 == 0)
+			{
+				boss_projectile_spawn(vector2d(700, 250));
+			}
+
 			if (keys[SDL_SCANCODE_G] && SDL_GetTicks() % 50 == 0)
 			{
 				p_health_spawn(vector2d(700, 250));

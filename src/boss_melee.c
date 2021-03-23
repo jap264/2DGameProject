@@ -6,7 +6,7 @@
 
 void boss_melee_update(Entity *self);
 void boss_melee_think(Entity *self);
-void boss_melee_collide(Entity *self);
+void boss_melee_collide(Entity *self, Entity *other);
 
 static int frozenDelay = 0;
 static int sheathedDelay = 0;
@@ -30,7 +30,7 @@ Entity *boss_melee_spawn(Vector2D position)
 	ent->update = boss_melee_update;
 	ent->think = boss_melee_think;
 	ent->collide = boss_melee_collide;
-	ent->health = 100;
+	ent->health = 200;
 	ent->ent_type = 7;
 	boss_melee->ent = ent;
 	boss_melee->frozen = false;
@@ -43,12 +43,20 @@ void boss_melee_collide(Entity *self, Entity *other)
 {
 	if (!self || !other) return;
 
+	if (other->weapon == 4 && boss_melee->frozen)
+	{
+		boss_melee->sheathed = true;
+		sheathedDelay = frozenDelay;
+		slog("unsheathing");
+	}
+
 	if (other->ent_type == 1)
 	{
 		if (other->weapon == 0 && boss_melee->sheathed && other->dmg != NULL)
 		{
 			self->health -= other->dmg;
 			entity_free(other);
+			slog("ent type: %i", other->ent_type);
 		}
 
 		if (other->weapon == 4) entity_free(other);
@@ -58,12 +66,6 @@ void boss_melee_collide(Entity *self, Entity *other)
 	{
 		boss_melee->frozen = true;
 		frozenDelay = 1000;
-	}
-
-	if (other->weapon == 4 && boss_melee->frozen)
-	{
-		boss_melee->sheathed = true;
-		sheathedDelay = 1000;
 	}
 
 
@@ -80,14 +82,20 @@ void boss_melee_update(Entity *self)
 
 	self->circle = shape_circle(self->position.x + 80, self->position.y + 80, radius);
 
-	if (boss_melee->sheathed) self->sprite = gf2d_sprite_load_image("images/boss_sheathed.png");
+	if (boss_melee->sheathed)
+	{
+		if (self->health > 150) self->sprite = gf2d_sprite_load_image("images/boss_sheathed.png"); 
+		if (self->health <= 150 && self->health > 100) self->sprite = gf2d_sprite_load_image("images/boss_sheathed_75.png");
+		if (self->health <= 100 && self->health > 50) self->sprite = gf2d_sprite_load_image("images/boss_sheathed_50.png");
+		if (self->health <= 50) self->sprite = gf2d_sprite_load_image("images/boss_sheathed_25.png");
+	}
 	else self->sprite = gf2d_sprite_load_all("images/boss_unsheathed.png", 160, 160, 2);
 
 	if (frozenDelay > 0) frozenDelay--;
 	if (frozenDelay <= 0) boss_melee->frozen = false;
 
 	if (sheathedDelay > 0) sheathedDelay--;
-	if (sheathedDelay <= 0 || boss_melee->frozen == false) boss_melee->sheathed = false;
+	if (sheathedDelay <= 0) boss_melee->sheathed = false;
 
 	vector2d_scale(self->velocity, self->velocity, 0.75);
 	if (vector2d_magnitude_squared(self->velocity) < 2)
@@ -118,5 +126,4 @@ void boss_melee_think(Entity *self)
 	vector2d_scale(thrust, aimdir, 1.8);
 	if (!boss_melee->frozen) vector2d_add(self->velocity, self->velocity, thrust);
 	else vector2d_clear(self->velocity);
-
 }
