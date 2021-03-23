@@ -20,8 +20,8 @@ Entity *mine_spawn()
 	}
 	ent->sprite = gf2d_sprite_load_image("images/mine.png");
 	Vector2D spawn;
-	spawn.x = get_player_entity()->position.x + 50;
-	spawn.y = get_player_entity()->position.y + 50;
+	spawn.x = get_player_entity()->position.x + 48;
+	spawn.y = get_player_entity()->position.y + 48;
 	vector2d_copy(ent->position, spawn);
 	ent->update = mine_update;
 	ent->think = mine_think;
@@ -47,6 +47,7 @@ Entity *mine_explosion_spawn(Vector2D position)
 
 	ent->ttv = 100;
 	ent->ent_type = 6;
+	ent->weapon = 1;
 
 	return ent;
 }
@@ -63,11 +64,13 @@ void mine_collide(Entity *self, Entity *other)
 
 void mine_update(Entity *self)
 {
+	if (!self) return;
 	self->circle = shape_circle(self->position.x + 16, self->position.y + 16, 8);
 }
 
 void mine_explosion_update(Entity *self)
 {
+	if (!self) return;
 	self->circle = shape_circle(self->position.x + 16, self->position.y + 16, 8);
 }
 

@@ -48,6 +48,7 @@ Entity *grenade_explosion_spawn(Vector2D position)
 	ent->position = spawn;
 	ent->ttv = 100;
 	ent->ent_type = 6;
+	ent->weapon = 1;
 	ent->update = grenade_explosion_update;
 
 	return ent;
@@ -55,6 +56,7 @@ Entity *grenade_explosion_spawn(Vector2D position)
 
 void grenade_explosion_update(Entity *self)
 {
+	if (!self) return;
 	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 16);
 }
 

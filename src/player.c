@@ -22,6 +22,10 @@ static int grenadeDelay = 0;
 static int mineDelay = 0;
 static int hammerDelay = 0;
 static int frozenDelay = 0;
+static int p_speedDelay = 0;
+static int p_firerateDelay = 0;
+static int p_invincDelay = 0;
+static int p_instakillDelay = 0;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -51,7 +55,46 @@ Entity *player_spawn(Vector2D position)
 	player->p_firerate = false;
 	player->p_invinc = false;
 	player->frozen = false;
+	player->alive = true;
 	return player->ent;
+}
+
+Entity *player_respawn(Vector2D position)
+{
+	Entity *ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for the player");
+		return NULL;
+	}
+	player->ent = ent;
+	player->ent->sprite = gf2d_sprite_load_all("images/ed210_top.png", 128, 128, 16);
+	vector2d_copy(player->ent->position, position);
+	player->ent->frameRate = 0.1;
+	player->ent->frameCount = 16;
+	player->ent->update = player_update;
+	player->ent->think = player_think;
+	player->ent->collide = player_collide;
+	player->ent->rotation.x = 64;
+	player->ent->rotation.y = 64;
+	player->ent->speed = 3;
+	player->maxHealth = 3;
+	player->ent->health = player->maxHealth;
+	player->currWeapon = 1;
+	player->ent->ent_type = 0;
+	player->p_speed = false;
+	player->p_firerate = false;
+	player->p_invinc = false;
+	player->frozen = false;
+	player->alive = true;
+	return player->ent;
+}
+
+void player_die()
+{
+	player->ent->health = 0;
+	entity_free(player->ent);
+	player->alive = false;
 }
 
 void player_collide(Entity *self, Entity *other)
@@ -69,19 +112,45 @@ void player_collide(Entity *self, Entity *other)
 	if (other->ent_type == 4)
 	{
 		//check type of powerup
+		if (other->powerup == 0) //health
+		{
+			player->ent->health = player->maxHealth;
+		}
 
+		else if (other->powerup == 1) //speed
+		{
+			player->p_speed = true;
+			p_speedDelay = 1000;
+		}
+
+		else if (other->powerup == 2) //firerate
+		{
+			player->p_firerate = true;
+			p_firerateDelay = 1000;
+		}
+
+		else if (other->powerup == 3) //invinc
+		{
+			player->p_invinc = true;
+			p_invincDelay = 1000;
+		}
+
+		else if (other->powerup == 4) //instakill
+		{
+			player->p_instakill = true;
+			p_instakillDelay = 1000;
+		}
+
+		entity_free(other);
 	}
 
 	//check if e_freeze
 	else if (other->ent_type == 5)
 	{
-		if (player->p_invinc == false)
-		{
-			player->frozen = true;
-			frozenDelay = 300;
-			slog("freeze");
-		}
-		else slog("player is invincible and cannot take damage.");
+
+		player->frozen = true;
+		frozenDelay += 300;
+		slog("freeze");
 
 		entity_free(other);
 	}
@@ -92,8 +161,6 @@ void player_collide(Entity *self, Entity *other)
 		// check if player is invincible
 		if (player->p_invinc == false) player->ent->health--;
 		else slog("player is invincible and cannot take damage.");
-
-		//if (player->health <0= 0) player_die();
 
 		//free the entity of the projectile
 		entity_free(other);
@@ -106,11 +173,13 @@ void player_collide(Entity *self, Entity *other)
 		if (player->p_invinc == false) player->ent->health--;
 		else slog("player is invincible and cannot take damage.");
 
-		//if (player->health <= 0) player_die();
-
 		//free the entity of the enemy
 		entity_free(other);
-	
+	}
+
+	else if (other->ent_type == 7 || other->ent_type == 8)
+	{
+		player_die();
 	}
 }
 
@@ -125,6 +194,18 @@ void player_update(Entity *self)
 	
 	if (frozenDelay > 0) frozenDelay--;
 	if (frozenDelay <= 0) player->frozen = false;
+
+	if (p_speedDelay > 0) p_speedDelay--;
+	if (p_speedDelay <= 0) player->p_speed = false;
+
+	if (p_firerateDelay > 0) p_firerateDelay--;
+	if (p_firerateDelay <= 0) player->p_firerate = false;
+
+	if (p_invincDelay > 0) p_invincDelay--;
+	if (p_invincDelay <= 0) player->p_invinc = false;
+
+	if (p_instakillDelay > 0) p_instakillDelay--;
+	if (p_instakillDelay <= 0) player->p_instakill = false;
 
 	if (player->p_speed == true) self->speed = 6;
 	else if (player->frozen == true) self->speed = 1;
@@ -151,9 +232,9 @@ void player_think(Entity *self)
 	if (!self)return;
 	keys = SDL_GetKeyboardState(NULL);
 	SDL_GetMouseState(&mx, &my);
-	camera = camera_get_position();
+	/*camera = camera_get_position();
 	mx += camera.x;
-	my += camera.y;
+	my += camera.y;*/
 	aimdir.x = mx - (self->position.x + 64);
 	aimdir.y = my - (self->position.y + 64);
 	angle = vector_angle(aimdir.x, aimdir.y);
@@ -297,6 +378,7 @@ void player_think(Entity *self)
 		}
 	}
 
+	if (player->ent->health <= 0) player_die();
 }
 
 Entity *get_player_entity()

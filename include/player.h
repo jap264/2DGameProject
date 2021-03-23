@@ -12,13 +12,14 @@ typedef struct Player_S
 {
 	Entity *ent;
 	int maxHealth;
-	int status; //alive or dead
+	Bool alive;
 	int points;
 	int enemiesKilled;
 	int currWeapon;
 	Bool p_speed;
 	Bool p_firerate;
 	Bool p_invinc;
+	Bool p_instakill;
 	Bool frozen;
 
 }Player;
@@ -29,6 +30,13 @@ typedef struct Player_S
 * @return NULL on error, or a pointer to a new player entity
 */
 Entity *player_spawn(Vector2D position);
+
+/**
+* @brief spawn a player entity
+* @param position the screen position to respawn the player at
+* @return NULL on error, or a pointer to a new player entity
+*/
+Entity *player_respawn(Vector2D position);
 
 /*
 *	@brief checks what the player collided with and respond accordingly

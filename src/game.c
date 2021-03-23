@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
     
     int mx,my;
     float mf = 0;
-    Sprite *mouse, *health, *weapon;
+    Sprite *mouse, *health, *weapon, *p_speed, *p_firerate, *p_invinc, *p_instakill, *frozen;
     Vector4D mouseColor = {255,100,255,200};
 
 	Entity *playerEnt = NULL;
@@ -64,6 +64,13 @@ int main(int argc, char * argv[])
 
 	//Weapon Init
 	rocket_init();
+
+	//Powerup UI Init
+	p_speed = gf2d_sprite_load_image("images/p_speedUI.png");
+	p_firerate = gf2d_sprite_load_image("images/p_firerateUI.png");
+	p_invinc = gf2d_sprite_load_image("images/p_invincUI.png");
+	p_instakill = gf2d_sprite_load_image("images/p_instakillUI.png");
+	frozen = gf2d_sprite_load_image("images/frozen.png");
 
 	slog("main game loop begin");
     /*main game loop*/
@@ -176,6 +183,41 @@ int main(int argc, char * argv[])
 				freeze_spawn(vector2d(700, 250));
 			}
 
+			if (keys[SDL_SCANCODE_LEFTBRACKET] && SDL_GetTicks() % 50 == 0)
+			{
+				boss_melee_spawn(vector2d(700, 250));
+			}
+
+			if (keys[SDL_SCANCODE_G] && SDL_GetTicks() % 50 == 0)
+			{
+				p_health_spawn(vector2d(700, 250));
+			}
+
+			if (keys[SDL_SCANCODE_H] && SDL_GetTicks() % 50 == 0)
+			{
+				p_speed_spawn(vector2d(700, 250));
+			}
+
+			if (keys[SDL_SCANCODE_J] && SDL_GetTicks() % 50 == 0)
+			{
+				p_firerate_spawn(vector2d(700, 250));
+			}
+
+			if (keys[SDL_SCANCODE_K] && SDL_GetTicks() % 50 == 0)
+			{
+				p_invinc_spawn(vector2d(700, 250));
+			}
+
+			if (keys[SDL_SCANCODE_L] && SDL_GetTicks() % 50 == 0)
+			{
+				p_instakill_spawn(vector2d(700, 250));
+			}
+
+			if (keys[SDL_SCANCODE_RETURN] && SDL_GetTicks() % 50 == 0 && player->alive == false)
+			{
+				player_respawn(vector2d(500, 250));
+			}
+
 			gf2d_sprite_draw(
                 mouse,
                 vector2d(mx,my),
@@ -214,6 +256,77 @@ int main(int argc, char * argv[])
 				NULL,
 				(int)mf
 				);
+
+			//Powerup UI
+			if (get_player()->p_speed)
+			{
+				gf2d_sprite_draw(
+					p_speed,
+					vector2d(1200-69, 720-69),
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					(int)mf
+					);
+			}
+
+			if (get_player()->p_firerate)
+			{
+				gf2d_sprite_draw(
+					p_firerate,
+					vector2d(1200 - (2*69), 720 - 69),
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					(int)mf
+					);
+			}
+
+			if (get_player()->p_invinc)
+			{
+				gf2d_sprite_draw(
+					p_invinc,
+					vector2d(1200 - (3 * 69), 720 - 69),
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					(int)mf
+					);
+			}
+
+			if (get_player()->p_instakill)
+			{
+				gf2d_sprite_draw(
+					p_instakill,
+					vector2d(1200 - (4 * 69), 720 - 69),
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					(int)mf
+					);
+			}
+
+			if (get_player()->frozen)
+			{
+				gf2d_sprite_draw(
+					frozen,
+					vector2d(1200 - (5 * 69), 720 - 69),
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					(int)mf
+					);
+			}
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         

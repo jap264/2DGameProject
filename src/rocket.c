@@ -38,8 +38,9 @@ Entity *rocket_spawn()
 	rocket->ent->collide = rocket_collide;
 	rocket->ent->ttv = 500;
 	rocket->ent->speed = 4;
-	ent->ent_type = 1;
-	ent->dmg = 0;
+	rocket->ent->ent_type = 1;
+	rocket->ent->weapon = 4;
+	rocket->ent->dmg = 0;
 	rocket->alive = true;
 
 	return rocket->ent;
@@ -59,6 +60,7 @@ Entity *explosion_spawn(Vector2D position)
 	rocket->explosion->position = position;
 	rocket->explosion->ttv = 100;
 	rocket->explosion->ent_type = 6;
+	rocket->explosion->weapon = 1;
 	rocket->explosion->update = explosion_update;
 
 	return rocket->explosion;
@@ -68,9 +70,7 @@ void rocket_collide(Entity *self, Entity *other)
 {
 	if (!self || !other) return;
 
-	if (other->ent_type != 2) return;
-	
-	rocket_explode(self);
+	if (other->ent_type == 2 || other->ent_type == 7 || other->ent_type == 8) rocket_explode(self);
 }
 
 void rocket_update(Entity *self)

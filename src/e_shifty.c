@@ -64,11 +64,11 @@ void shifty_think(Entity *self)
 	int mx, my;
 	if (!self)return;
 	
-	mx = get_player_entity()->position.x + 30;
-	my = get_player_entity()->position.y + 30;
+	mx = get_player_entity()->position.x + 64;
+	my = get_player_entity()->position.y + 64;
 
-	aimdir.x = mx - (self->position.x);
-	aimdir.y = my - (self->position.y);
+	aimdir.x = mx - (self->position.x + 32);
+	aimdir.y = my - (self->position.y + 32);
 
 	aimdir2.x = mx - (self->position.x + 100);
 	aimdir2.y = my - (self->position.y - 100);

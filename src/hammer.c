@@ -27,6 +27,7 @@ Entity *ground_pound_spawn()
 	ent->think = hammer_think;
 	ent->ttv = 100;
 	ent->ent_type = 6;
+	ent->weapon = 3;
 
 	return ent;
 }
@@ -40,5 +41,4 @@ void hammer_update(Entity *self)
 void hammer_think(Entity *self)
 {
 	if (!self) return;
-	self->position = get_player_entity()->position;
 }
