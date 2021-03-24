@@ -133,7 +133,11 @@ void minion_collide(Entity *self, Entity *other)
 {
 	if (!self || !other) return;
 
-	if (other->ent_type == 9) entity_free(self);
+	if (other->ent_type == 9)
+	{
+		entity_free(self);
+		get_player()->enemiesKilled++;
+	}
 }
 
 void cannonball_collide(Entity *self, Entity *other)
@@ -183,8 +187,10 @@ void boss_projectile_update(Entity *self)
 
 	if (boss_projectile->lives <= 0)
 	{
+		get_player()->bossesKilled++;
+		get_player()->enemiesKilled++;
+		boss_projectile->alive = false; 
 		entity_free(self);
-		boss_projectile->alive = false;
 	}
 	
 	vector2d_scale(self->velocity, self->velocity, 0.75);

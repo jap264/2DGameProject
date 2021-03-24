@@ -1,30 +1,34 @@
-# gameframework2d (GF2D)
-a collection of utlitity functions designed to facilitate creating 2D games with SDL2
-This project is specifically intended to function as an educational tool for my students taking 2D Game Programming.
+Run & Gun - Jansen Pimentel
 
-Currently the project is in a WIP state, however it is functional with sample projects showcasing rudimentary scrolling shooters,
-platformers, and adventure games.
+WASD to move the player and left-click on the mouse to shoot towards mouse-controlled crosshair.
+The player has 3 lives with UI shown in the bottom left corner.
 
-The master branch is kept deliberately minimal to allow students to build out systems as they are learning.
-Other branches have more complete system: Collisions, menus, input abstraction.
+There are 10 weapons with UI shown in the bottom left corner: (keybind to switch between weapons)
+("1") Pistol
+("2") SMG
+("3") Shotgun
+("4") LMG w/ Bipod
+("5") Sniper
+("6") Rocket Launcher
+("7") Thunder Gun
+("Q") Grenades
+("E") Mines
+("F") Hammer
 
-# Build Process
+There are 5 enemy types: enemies/enemy projectiles take away one life when touched by the player (keybind to spawn)
+("Y") Walker Mob
+("U") Projectile Mob
+("I") Armored Mob
+("O") Glitch Mob
+("P") Freeze Mob
 
-Before you can build the example code we are providing for you, you will need to obtain the libraries required
-by the source code
- - SDL2
- - SDL2_image
- - SDL2_mixer
- - SDL2_ttf
-There are additional sub modules that are needed for this project to work as well, but they can be pulled right from within the project.
-Performable from the following steps from the root of the cloned git repository within a terminal. 
+There are 2 boss types: bosses instantly kill the player (keybind to spawn)
+("[") Melee Boss
+("]") Projectile Boss
 
-Make sure you fetch submodules: `git submodule update --init --recursive`
-Go into each submodule's src directory and type:
-`make`
-`make static`
-
-Once each submodule has been made you can go into the base project src folder anre simply type:
-`make`
-
-You should now have a `gf2d` binary within the root of your git repository. Executing this will start your game.
+There are 5 powerup types: powerups are pickup buffs to the player (keybind to spawn)
+("G") Health
+("H") Speed
+("J") Firerate
+("K") Invincibility
+("L") InstaKill

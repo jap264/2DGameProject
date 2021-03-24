@@ -32,6 +32,7 @@ typedef struct Entity_s
 	int			speed;	//used for projectiles
 	int			dmg;	//used for projectiles
 	int			health;
+	int			glitch; //used for delay of tp mob
 
 }Entity;
 

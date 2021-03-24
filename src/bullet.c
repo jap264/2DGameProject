@@ -30,7 +30,7 @@ Entity *pistol_round_spawn(int destinationx, int destinationy)
 	ent->collide = bullet_collide;
 	if (get_player()->p_instakill) ent->dmg = 20;
 	else ent->dmg = 3;
-	ent->ttv = 400;
+	ent->ttv = 600;
 	ent->speed = 2;
 	ent->ent_type = 1;
 	ent->weapon = 0;

@@ -13,8 +13,8 @@ typedef struct Player_S
 	Entity *ent;
 	int maxHealth;
 	Bool alive;
-	int points;
 	int enemiesKilled;
+	int bossesKilled;
 	int currWeapon;
 	Bool p_speed;
 	Bool p_firerate;
@@ -43,6 +43,16 @@ Entity *player_respawn(Vector2D position);
 *	@param other the entity the player collided with
 */
 void player_collide(Entity *other);
+
+/*
+*	@brief saves enemies and bosses killed if higher than highscores
+*/
+void player_save_highscore();
+
+/*
+*	@brief saves number of enemies killed after player death
+*/
+void player_save_score();
 
 /*
 *	@brief player has lost all health

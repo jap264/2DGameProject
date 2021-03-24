@@ -68,8 +68,6 @@ void boss_melee_collide(Entity *self, Entity *other)
 		frozenDelay = 1000;
 	}
 
-
-	if (self->health <= 0 ) entity_free(self);
 }
 
 void boss_melee_update(Entity *self)
@@ -96,6 +94,13 @@ void boss_melee_update(Entity *self)
 
 	if (sheathedDelay > 0) sheathedDelay--;
 	if (sheathedDelay <= 0) boss_melee->sheathed = false;
+
+	if (self->health <= 0)
+	{
+		get_player()->bossesKilled++;
+		get_player()->enemiesKilled++;
+		entity_free(self);
+	}
 
 	vector2d_scale(self->velocity, self->velocity, 0.75);
 	if (vector2d_magnitude_squared(self->velocity) < 2)

@@ -25,7 +25,7 @@ Entity *ground_pound_spawn()
 	vector2d_copy(ent->position, spawn);
 	ent->update = hammer_update;
 	ent->think = hammer_think;
-	ent->ttv = 100;
+	ent->ttv = 95;
 	ent->ent_type = 6;
 	ent->weapon = 3;
 

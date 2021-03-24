@@ -212,11 +212,11 @@ void level_draw(Level *level)
 		if (level->tileMap[i] == 0)continue;
 		drawPosition.x = ((i % level->levelWidth)*level->tileSet->frame_w);
 		drawPosition.y = ((i / level->levelWidth)*level->tileSet->frame_h);
-		if (!camera_rect_on_screen(gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h)))
-		{
-			//tile is off camera, skip
-			continue;
-		}
+		//if (!camera_rect_on_screen(gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h)))
+		//{
+		//	//tile is off camera, skip
+		//	continue;
+		//}
 		drawPosition.x += offset.x;
 		drawPosition.y += offset.y;
 		gf2d_sprite_draw(

@@ -1,4 +1,5 @@
 #include "simple_logger.h"
+#include "simple_json.h"
 
 #include "player.h"
 #include "camera.h"
@@ -56,6 +57,8 @@ Entity *player_spawn(Vector2D position)
 	player->p_invinc = false;
 	player->frozen = false;
 	player->alive = true;
+	player->enemiesKilled = 0;
+	player->bossesKilled = 0;
 	return player->ent;
 }
 
@@ -87,6 +90,8 @@ Entity *player_respawn(Vector2D position)
 	player->p_invinc = false;
 	player->frozen = false;
 	player->alive = true;
+	player->enemiesKilled = 0;
+	player->bossesKilled = 0;
 	return player->ent;
 }
 
@@ -95,6 +100,8 @@ void player_die()
 	player->ent->health = 0;
 	entity_free(player->ent);
 	player->alive = false;
+	player_save_score();
+	player_save_highscore();
 }
 
 void player_collide(Entity *self, Entity *other)
@@ -106,7 +113,7 @@ void player_collide(Entity *self, Entity *other)
 		|| other->ent_type == 0 
 		|| other->ent_type == 6) return;
 
-	slog("p_collision, ent type: %i", other->ent_type);
+	//slog("p_collision, ent type: %i", other->ent_type);
 	
 	//check if powerup
 	if (other->ent_type == 4)
@@ -179,6 +186,8 @@ void player_update(Entity *self)
 
 	if (!self)return;
 	
+	//slog("%f , %f", self->position.x, self->position.y);
+
 	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 32);
 	
 	if (frozenDelay > 0) frozenDelay--;
@@ -234,34 +243,41 @@ void player_think(Entity *self)
 	// check for motion
 	if (player->currWeapon != 4)
 	{
-		if (keys[SDL_SCANCODE_W])
+		if (keys[SDL_SCANCODE_W] && self->position.y > 7)
 		{
 			self->position.y -= self->speed;
 			/*vector2d_scale(thrust, aimdir, 2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
 	
-		else if (keys[SDL_SCANCODE_S])
+		else if (keys[SDL_SCANCODE_S] && self->position.y < 593)
 		{
 			self->position.y += self->speed;
 			/*vector2d_scale(thrust, aimdir, -2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
 	
-		if (keys[SDL_SCANCODE_A])
+		if (keys[SDL_SCANCODE_A] && self->position.x > 7)
 		{
 			self->position.x -= self->speed;
 			/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
 	
-		else if (keys[SDL_SCANCODE_D])
+		else if (keys[SDL_SCANCODE_D] && self->position.x < 1063)
 		{
 			self->position.x += self->speed;
 			/*vector2d_scale(thrust, vector2d(aimdir.x+1,aimdir.y+1), 2);
 			vector2d_add(self->velocity, self->velocity, thrust);*/
 		}
 	}
+
+	//tp
+	Vector2D tp = vector2d(673,373);
+	if (self->position.y == 7 && self->position.x >= 655 && self->position.x <= 690) self->position = tp;
+	if (self->position.y == 595 && self->position.x >= 655 && self->position.x <= 690) self->position = tp;
+	if (self->position.x <= 7 && self->position.y >= 355 && self->position.y <= 385) self->position = tp;
+	if (self->position.x >= 1063 && self->position.y >= 355 && self->position.y <= 385) self->position = tp;
 
 	if (pistolDelay > 0) pistolDelay--;
 	if (smgDelay > 0) smgDelay--;
@@ -368,6 +384,80 @@ void player_think(Entity *self)
 	}
 
 	if (player->ent->health <= 0) player_die();
+}
+
+void player_save_highscore()
+{
+	SJson *highscoreFile = sj_load("json/highscore.json");
+
+	if (!highscoreFile)
+	{
+		slog("no file found");
+		return;
+	}
+
+	else
+	{
+		slog("highscore file found!");
+
+		//check if score is higher than previous highscore
+		SJson *file_contents = sj_object_get_value(highscoreFile, "Highscores");
+		SJson *eKilled = sj_object_get_value(file_contents, "EnemiesKilled");
+		SJson *bKilled = sj_object_get_value(file_contents, "BossesKilled");
+
+		int e, b;
+		sj_get_integer_value(eKilled, &e);
+		sj_get_integer_value(bKilled, &b);
+
+		SJson *new_contents = sj_object_new();
+
+		if (player->enemiesKilled > e)
+		{
+			SJson *new = sj_new_int(player->enemiesKilled);
+			sj_object_insert(new_contents, "EnemiesKilled", new);
+		}
+
+		else
+		{
+			sj_object_insert(new_contents, "EnemiesKilled", eKilled);
+		}
+
+		if (player->bossesKilled > b)
+		{
+			SJson *new = sj_new_int(player->bossesKilled);
+			sj_object_insert(new_contents, "BossesKilled", new);
+		}
+
+		else
+		{
+			sj_object_insert(new_contents, "BossesKilled", bKilled);
+		}
+
+		SJson *new_file = sj_object_new();
+		sj_object_insert(new_file, "Highscores", new_contents);
+		sj_save(new_file, "json/highscore.json");
+	}
+}
+
+void player_save_score()
+{
+	SJson *scorelist = sj_load("json/scorelist.json");
+
+	if (!scorelist)
+	{
+		slog("no file found");
+		return;
+	}
+
+	else
+	{
+		slog("highscore file found!");
+		SJson *scorelist_contents = sj_object_get_value(scorelist, "Scores");
+		SJson *new_score = sj_new_int(player->enemiesKilled);
+		sj_array_append(scorelist_contents, new_score);
+		slog("New Score Added: %i", player->enemiesKilled);
+		sj_save(scorelist, "json/scorelist.json");
+	}
 }
 
 Entity *get_player_entity()

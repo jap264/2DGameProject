@@ -93,8 +93,10 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
 
-			level_draw(level);
+			
             gf2d_sprite_draw_image(background,vector2d(0,0));
+
+			level_draw(level);
 			//gf2d_sprite_draw_image(player->ent->sprite, vector2d(0, 0));
 
 			entity_manager_draw_entities();
@@ -169,11 +171,11 @@ int main(int argc, char * argv[])
 			{
 				shooter_spawn(vector2d(700, 250));
 			}
-			if (keys[SDL_SCANCODE_I] && SDL_GetTicks() % 50 == 0)
+			if (keys[SDL_SCANCODE_O] && SDL_GetTicks() % 50 == 0)
 			{
 				shifty_spawn(vector2d(700, 250));
 			}
-			if (keys[SDL_SCANCODE_O] && SDL_GetTicks() % 50 == 0)
+			if (keys[SDL_SCANCODE_I] && SDL_GetTicks() % 50 == 0)
 			{
 				armored_spawn(vector2d(700, 250));
 			}

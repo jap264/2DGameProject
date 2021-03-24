@@ -27,6 +27,7 @@ Entity *shifty_spawn(Vector2D position)
 	ent->rotation.y = 32;
 	ent->health = 5;
 	ent->ent_type = 2;
+	ent->glitch = 100;
 	return ent;
 }
 
@@ -40,7 +41,11 @@ void shifty_collide(Entity *self, Entity *other)
 		entity_free(other);
 	}
 
-	if (self->health <= 0 || other->ent_type == 6) entity_free(self);
+	if (self->health <= 0 || other->ent_type == 6)
+	{
+		get_player()->enemiesKilled++;
+		entity_free(self);
+	}
 }
 
 void shifty_update(Entity *self)
@@ -89,8 +94,9 @@ void shifty_think(Entity *self)
 	vector2d_scale(thrust, aimdir, 1.6);
 	vector2d_add(self->velocity, self->velocity, thrust);
 
+	if (self->glitch > 0) self->glitch--;
 
-	if (SDL_GetTicks() % 100 == 0)
+	if (self->glitch <= 0)
 	{
 		int num = randNum();
 
@@ -98,6 +104,7 @@ void shifty_think(Entity *self)
 		else if (num > 2 && num <= 5) self->position.x -= 100;
 		else if (num > 5 && num <= 8) self->position.y -= 100;
 		else self->position.y += 100;
+		self->glitch = 50;
 	}
 
 }
