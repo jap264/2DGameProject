@@ -437,6 +437,8 @@ void player_save_highscore()
 		sj_object_insert(new_file, "Highscores", new_contents);
 		sj_save(new_file, "json/highscore.json");
 	}
+
+	sj_free(highscoreFile);
 }
 
 void player_save_score()
@@ -458,6 +460,8 @@ void player_save_score()
 		slog("New Score Added: %i", player->enemiesKilled);
 		sj_save(scorelist, "json/scorelist.json");
 	}
+
+	sj_free(scorelist);
 }
 
 Entity *get_player_entity()

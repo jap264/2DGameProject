@@ -1,0 +1,14 @@
+{
+	"Actor":
+	{
+		"SpriteSheet":"name.png",
+		"Actions":[
+			{"name": "actionName",
+			"startFrame": "0",
+			"endFrame": "1",
+			"currFrame": "0",
+			"frameRate": "0.1"
+			}
+		]
+	}
+}

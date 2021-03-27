@@ -1,3 +1,11 @@
+COMMONS
+-Entity System
+-Fully Interactable Environment
+-UI
+-File Read/Write Access
+-ReadMe
+
+PERSONALS
 -Run & Gun WASD/Mouse moving and shooting
 
 -5 varieties of enemies to overcome
