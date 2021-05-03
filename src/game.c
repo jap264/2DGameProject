@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
     
     int mx,my;
     float mf = 0;
-    Sprite *mouse, *health, *weapon, *p_speed, *p_firerate, *p_invinc, *p_instakill, *frozen;
+    Sprite *mouse, *health, *weapon, *p_speed, *p_firerate, *p_invinc, *p_instakill, *frozen, *multiplier, *combobar;
     Vector4D mouseColor = {255,100,255,200};
 
 	Entity *playerEnt = NULL;
@@ -253,6 +253,7 @@ int main(int argc, char * argv[])
 				(int)mf
 			);
 
+			//Weapon UI
 			gf2d_sprite_draw(
 				weapon,
 				vector2d(140, 615),
@@ -264,6 +265,39 @@ int main(int argc, char * argv[])
 				(int)mf
 				);
 
+			//Multiplier
+			if (get_player()->multiplier == 2) multiplier = gf2d_sprite_load_image("images/combo_2x.png");
+			else if (get_player()->multiplier == 1) multiplier = gf2d_sprite_load_image("images/combo_1x.png");
+			else multiplier = gf2d_sprite_load_image("images/combo_3x.png");
+
+			gf2d_sprite_draw(
+				multiplier,
+				vector2d(1200-69, 5),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(int)mf
+				);
+			
+			//Combo Bar
+			if (get_player()->inARow == 0) combobar = gf2d_sprite_load_image("images/0inarow.png");
+			else if (get_player()->inARow == 1) combobar = gf2d_sprite_load_image("images/1inarow.png");
+			else if (get_player()->inARow == 2) combobar = gf2d_sprite_load_image("images/2inarow.png");
+			else if (get_player()->inARow == 3) combobar = gf2d_sprite_load_image("images/3inarow.png");
+			else if (get_player()->inARow == 4) combobar = gf2d_sprite_load_image("images/4inarow.png");
+
+			gf2d_sprite_draw(
+				combobar,
+				vector2d(1200 - 80, 5),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(int)mf
+				);
 			//Powerup UI
 			if (get_player()->p_speed)
 			{

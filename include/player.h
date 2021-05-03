@@ -10,17 +10,19 @@
 
 typedef struct Player_S
 {
-	Entity *ent;
-	int maxHealth;
-	Bool alive;
-	int enemiesKilled;
-	int bossesKilled;
-	int currWeapon;
-	Bool p_speed;
-	Bool p_firerate;
-	Bool p_invinc;
-	Bool p_instakill;
-	Bool frozen;
+	Entity	*ent;
+	int		maxHealth;
+	Bool	alive;
+	int		enemiesKilled;
+	int		bossesKilled;
+	int		currWeapon;
+	int		multiplier;
+	int		inARow;
+	Bool	p_speed;
+	Bool	p_firerate;
+	Bool	p_invinc;
+	Bool	p_instakill;
+	Bool	frozen;
 
 }Player;
 

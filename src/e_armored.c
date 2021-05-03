@@ -44,6 +44,7 @@ void armored_collide(Entity *self, Entity *other)
 	if (self->health <= 0 || other->ent_type == 6)
 	{
 		get_player()->enemiesKilled++;
+		get_player()->inARow++;
 		entity_free(self);
 	}
 }

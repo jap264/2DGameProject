@@ -43,6 +43,7 @@ void shifty_collide(Entity *self, Entity *other)
 
 	if (self->health <= 0 || other->ent_type == 6)
 	{
+		get_player()->inARow++;
 		get_player()->enemiesKilled++;
 		entity_free(self);
 	}

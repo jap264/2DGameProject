@@ -59,6 +59,8 @@ Entity *player_spawn(Vector2D position)
 	player->alive = true;
 	player->enemiesKilled = 0;
 	player->bossesKilled = 0;
+	player->multiplier = 1;
+	player->inARow = 0;
 	return player->ent;
 }
 
@@ -92,6 +94,8 @@ Entity *player_respawn(Vector2D position)
 	player->alive = true;
 	player->enemiesKilled = 0;
 	player->bossesKilled = 0;
+	player->multiplier = 1;
+	player->inARow = 0;
 	return player->ent;
 }
 
@@ -158,7 +162,8 @@ void player_collide(Entity *self, Entity *other)
 		player->frozen = true;
 		frozenDelay += 300;
 		slog("freeze");
-
+		player->inARow = 0;
+		player->multiplier = 1;
 		entity_free(other);
 	}
 
@@ -166,7 +171,12 @@ void player_collide(Entity *self, Entity *other)
 	else if (other->ent_type == 2 || other->ent_type == 3 || other->ent_type == 9)
 	{
 		// check if player is invincible
-		if (player->p_invinc == false) player->ent->health--;
+		if (player->p_invinc == false)
+		{
+			player->ent->health--;
+			player->multiplier = 1;
+			player->inARow = 0;
+		}
 		else slog("player is invincible and cannot take damage.");
 
 		//free the entity of the projectile
@@ -190,6 +200,14 @@ void player_update(Entity *self)
 
 	self->circle = shape_circle(self->position.x + 64, self->position.y + 64, 32);
 	
+	//Combo
+	if (player->inARow == 5)
+	{
+		player->multiplier++;
+		player->inARow = 0;
+	}
+
+	//Powerups
 	if (frozenDelay > 0) frozenDelay--;
 	if (frozenDelay <= 0) player->frozen = false;
 
