@@ -3,6 +3,7 @@
 #include "e_armored.h"
 #include "camera.h"
 #include "entity.h"
+#include "sounds.h"
 
 void armored_update(Entity *self);
 void armored_think(Entity *self);
@@ -45,6 +46,7 @@ void armored_collide(Entity *self, Entity *other)
 	{
 		get_player()->enemiesKilled++;
 		get_player()->inARow++;
+		sounds_play_enemydeath();
 		entity_free(self);
 	}
 }

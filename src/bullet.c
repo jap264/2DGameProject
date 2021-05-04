@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "bullet.h"
+#include "sounds.h"
 
 void bullet_update(Entity *self);
 void bullet_collide(Entity *self, Entity *other);

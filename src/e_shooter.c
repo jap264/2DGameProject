@@ -3,6 +3,7 @@
 #include "e_shooter.h"
 #include "camera.h"
 #include "entity.h"
+#include "sounds.h"
 
 void shooter_update(Entity *self);
 void pellet_update(Entity *self);
@@ -85,6 +86,7 @@ void shooter_collide(Entity *self, Entity *other)
 	{
 		get_player()->inARow++;
 		get_player()->enemiesKilled++;
+		sounds_play_enemydeath();
 		entity_free(self);
 	}
 }

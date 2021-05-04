@@ -3,6 +3,7 @@
 #include "e_shifty.h"
 #include "camera.h"
 #include "entity.h"
+#include "sounds.h"
 
 void shifty_update(Entity *self);
 void shifty_think(Entity *self);
@@ -45,6 +46,7 @@ void shifty_collide(Entity *self, Entity *other)
 	{
 		get_player()->inARow++;
 		get_player()->enemiesKilled++;
+		sounds_play_enemydeath();
 		entity_free(self);
 	}
 }

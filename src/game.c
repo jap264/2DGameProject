@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "level.h"
+#include "sounds.h"
 #include "rocket.h"
 #include "e_walker.h"
 #include "e_shooter.h"
@@ -61,6 +62,10 @@ int main(int argc, char * argv[])
 	player_spawn(vector2d(500, 250));
 	player = get_player();
 	playerEnt = get_player_entity();
+
+	//Sounds Init
+	sounds_init();
+	sounds_play_gamesound();
 
 	//Weapon Init
 	rocket_init();

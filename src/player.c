@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "bullet.h"
+#include "sounds.h"
 #include "rocket.h"
 #include "mine.h"
 #include "shape.h"
@@ -104,6 +105,7 @@ void player_die()
 	player->ent->health = 0;
 	entity_free(player->ent);
 	player->alive = false;
+	sounds_play_playerdeath();
 	player_save_score();
 	player_save_highscore();
 }
@@ -160,6 +162,7 @@ void player_collide(Entity *self, Entity *other)
 	{
 
 		player->frozen = true;
+		sounds_play_playerhit();
 		frozenDelay += 300;
 		slog("freeze");
 		player->inARow = 0;
@@ -174,6 +177,7 @@ void player_collide(Entity *self, Entity *other)
 		if (player->p_invinc == false)
 		{
 			player->ent->health--;
+			sounds_play_playerhit();
 			player->multiplier = 1;
 			player->inARow = 0;
 		}

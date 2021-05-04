@@ -3,6 +3,7 @@
 #include "boss_projectile.h"
 #include "camera.h"
 #include "entity.h"
+#include "sounds.h"
 
 void boss_projectile_update(Entity *self);
 void boss_projectile_think(Entity *self);
@@ -137,6 +138,7 @@ void minion_collide(Entity *self, Entity *other)
 	{
 		entity_free(self);
 		get_player()->enemiesKilled++;
+		sounds_play_enemydeath();
 	}
 }
 
