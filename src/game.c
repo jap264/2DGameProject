@@ -25,7 +25,12 @@ int main(int argc, char * argv[])
     
     int mx,my;
     float mf = 0;
-    Sprite *mouse, *health, *weapon, *p_speed, *p_firerate, *p_invinc, *p_instakill, *frozen, *multiplier, *combobar;
+    Sprite *mouse, 
+		*health, 
+		*weapon, 
+		*p_speed, *p_firerate, *p_invinc, *p_instakill, *frozen, 
+		*multiplier, *combobar,
+		*mainmenu, *pausedmenu, *playbutton, *quitbutton;
     Vector4D mouseColor = {255,100,255,200};
 
 	Entity *playerEnt = NULL;
@@ -58,6 +63,12 @@ int main(int argc, char * argv[])
     mouse = gf2d_sprite_load_image("images/crosshair.png");
 	weapon = gf2d_sprite_load_image("images/pistol.png");
 
+	//Menu Setup
+	int mm = 1;
+	int mmbutton = 0;
+	mainmenu = gf2d_sprite_load_image("images/mainmenu.png");
+	pausedmenu = gf2d_sprite_load_image("images/pausedmenu.png");
+
 	//Player Spawn
 	player_spawn(vector2d(500, 250));
 	player = get_player();
@@ -88,26 +99,114 @@ int main(int argc, char * argv[])
         /*mf+=0.1;
         if (mf >= 16.0)mf = 0;*/
         
-		entity_manager_think_entities();
-		entity_manager_update_entities();
-		check_all_collisions();
+		if (mm == 1)
+		{
+			gf2d_sprite_draw_image(mainmenu, vector2d(0, 0));
 
-		level_update(level);
-        
-        gf2d_graphics_clear_screen();// clears drawing buffers
-        // all drawing should happen betweem clear_screen and next_frame
-            //backgrounds drawn first
+			if (mmbutton == 0) //hovering play button
+			{
+				playbutton = gf2d_sprite_load_image("images/play_hovered.png");
+				quitbutton = gf2d_sprite_load_image("images/quit_unhovered.png");
+				if (keys[SDL_SCANCODE_RETURN]) mm = 0;
+				else if (keys[SDL_SCANCODE_S]) mmbutton = 1;
+			}
 
-			
-            gf2d_sprite_draw_image(background,vector2d(0,0));
+			if (mmbutton == 1) //hovering quit button
+			{
+				playbutton = gf2d_sprite_load_image("images/play_unhovered.png");
+				quitbutton = gf2d_sprite_load_image("images/quit_hovered.png");
+				if (keys[SDL_SCANCODE_RETURN]) done = 1;
+				else if (keys[SDL_SCANCODE_W]) mmbutton = 0;
+			}
+
+			gf2d_sprite_draw(
+				playbutton,
+				vector2d(600 - (70), 430),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(int)mf
+				);
+
+			gf2d_sprite_draw(
+				quitbutton,
+				vector2d(600 - (70), 500),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(int)mf
+				);
+		}
+
+		else if (mm == 2)
+		{
+			gf2d_sprite_draw_image(pausedmenu, vector2d(0, 0));
+
+			if (mmbutton == 0) //hovering play button
+			{
+				playbutton = gf2d_sprite_load_image("images/play_hovered.png");
+				quitbutton = gf2d_sprite_load_image("images/quit_unhovered.png");
+				if (keys[SDL_SCANCODE_RETURN]) mm = 0;
+				else if (keys[SDL_SCANCODE_S]) mmbutton = 1;
+			}
+
+			if (mmbutton == 1) //hovering quit button
+			{
+				playbutton = gf2d_sprite_load_image("images/play_unhovered.png");
+				quitbutton = gf2d_sprite_load_image("images/quit_hovered.png");
+				if (keys[SDL_SCANCODE_RETURN]) done = 1;
+				else if (keys[SDL_SCANCODE_W]) mmbutton = 0;
+			}
+
+			gf2d_sprite_draw(
+				playbutton,
+				vector2d(600 - (75), 290),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(int)mf
+				);
+
+			gf2d_sprite_draw(
+				quitbutton,
+				vector2d(600 - (75), 360),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(int)mf
+				);
+		}
+
+		else
+		{
+			entity_manager_think_entities();
+			entity_manager_update_entities();
+			check_all_collisions();
+
+			level_update(level);
+
+			gf2d_graphics_clear_screen();// clears drawing buffers
+			// all drawing should happen betweem clear_screen and next_frame
+			//backgrounds drawn first
+
+
+			gf2d_sprite_draw_image(background, vector2d(0, 0));
 
 			level_draw(level);
 			//gf2d_sprite_draw_image(player->ent->sprite, vector2d(0, 0));
 
 			entity_manager_draw_entities();
-            
+
 			//UI elements last
-				//Weapon UI
+			//Weapon UI
 			if (keys[SDL_SCANCODE_1])
 			{
 				weapon = gf2d_sprite_load_image("images/pistol.png");
@@ -168,9 +267,10 @@ int main(int argc, char * argv[])
 				player->currWeapon = 10;
 			}
 
+			//Manual Spawning
 			if (keys[SDL_SCANCODE_Y] && SDL_GetTicks() % 50 == 0)
 			{
-				walker_spawn(vector2d(700,250));
+				walker_spawn(vector2d(700, 250));
 			}
 			if (keys[SDL_SCANCODE_U] && SDL_GetTicks() % 50 == 0)
 			{
@@ -230,16 +330,17 @@ int main(int argc, char * argv[])
 				player_respawn(vector2d(500, 250));
 			}
 
+			//Mouse Draw
 			gf2d_sprite_draw(
-                mouse,
-                vector2d(mx,my),
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                &mouseColor,
-                (int)mf
-			);
+				mouse,
+				vector2d(mx, my),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				&mouseColor,
+				(int)mf
+				);
 
 			//Health UI
 			if (get_player_health() == 3) health = gf2d_sprite_load_image("images/full_health.png");
@@ -256,7 +357,7 @@ int main(int argc, char * argv[])
 				NULL,
 				NULL,
 				(int)mf
-			);
+				);
 
 			//Weapon UI
 			gf2d_sprite_draw(
@@ -277,7 +378,7 @@ int main(int argc, char * argv[])
 
 			gf2d_sprite_draw(
 				multiplier,
-				vector2d(1200-69, 5),
+				vector2d(1200 - 69, 5),
 				NULL,
 				NULL,
 				NULL,
@@ -285,7 +386,7 @@ int main(int argc, char * argv[])
 				NULL,
 				(int)mf
 				);
-			
+
 			//Combo Bar
 			if (get_player()->inARow == 0) combobar = gf2d_sprite_load_image("images/0inarow.png");
 			else if (get_player()->inARow == 1) combobar = gf2d_sprite_load_image("images/1inarow.png");
@@ -308,7 +409,7 @@ int main(int argc, char * argv[])
 			{
 				gf2d_sprite_draw(
 					p_speed,
-					vector2d(1200-69, 720-69),
+					vector2d(1200 - 69, 720 - 69),
 					NULL,
 					NULL,
 					NULL,
@@ -322,7 +423,7 @@ int main(int argc, char * argv[])
 			{
 				gf2d_sprite_draw(
 					p_firerate,
-					vector2d(1200 - (2*69), 720 - 69),
+					vector2d(1200 - (2 * 69), 720 - 69),
 					NULL,
 					NULL,
 					NULL,
@@ -374,10 +475,11 @@ int main(int argc, char * argv[])
 					);
 			}
 
+			if (keys[SDL_SCANCODE_ESCAPE]) mm = 2;
+		}
+
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
-        
-		
-        if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
+       
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     slog("---==== END ====---");
