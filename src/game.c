@@ -15,6 +15,7 @@
 #include "e_walker.h"
 #include "e_shooter.h"
 #include "e_shifty.h"
+#include "wavesystem.h"
 
 int main(int argc, char * argv[])
 {
@@ -30,9 +31,10 @@ int main(int argc, char * argv[])
 		*weapon, 
 		*p_speed, *p_firerate, *p_invinc, *p_instakill, *frozen, 
 		*multiplier, *combobar,
-		*mainmenu, *pausedmenu, *playbutton, *quitbutton;
+		*mainmenu, *pausedmenu, *playbutton, *quitbutton, *homebutton,
+		*death;
     Vector4D mouseColor = {255,100,255,200};
-
+	int buttondelay = 0;
 	Entity *playerEnt = NULL;
 	Player *player;
 
@@ -62,6 +64,7 @@ int main(int argc, char * argv[])
 	level = level_load("levels/exampleLevel.json");
     mouse = gf2d_sprite_load_image("images/crosshair.png");
 	weapon = gf2d_sprite_load_image("images/pistol.png");
+	death = gf2d_sprite_load_image("images/dead.png");
 
 	//Menu Setup
 	int mm = 1;
@@ -80,13 +83,17 @@ int main(int argc, char * argv[])
 
 	//Weapon Init
 	rocket_init();
-
+	
 	//Powerup UI Init
 	p_speed = gf2d_sprite_load_image("images/p_speedUI.png");
 	p_firerate = gf2d_sprite_load_image("images/p_firerateUI.png");
 	p_invinc = gf2d_sprite_load_image("images/p_invincUI.png");
 	p_instakill = gf2d_sprite_load_image("images/p_instakillUI.png");
 	frozen = gf2d_sprite_load_image("images/frozen.png");
+
+	//WaveSystem Init
+	wavesystem_init();
+	WaveSystem *wavesystem = get_wavesystem();
 
 	slog("main game loop begin");
     /*main game loop*/
@@ -98,16 +105,21 @@ int main(int argc, char * argv[])
         SDL_GetMouseState(&mx,&my);
         /*mf+=0.1;
         if (mf >= 16.0)mf = 0;*/
-        
+
 		if (mm == 1)
 		{
+			if (buttondelay > 0) buttondelay--;
 			gf2d_sprite_draw_image(mainmenu, vector2d(0, 0));
 
 			if (mmbutton == 0) //hovering play button
 			{
 				playbutton = gf2d_sprite_load_image("images/play_hovered.png");
 				quitbutton = gf2d_sprite_load_image("images/quit_unhovered.png");
-				if (keys[SDL_SCANCODE_RETURN]) mm = 0;
+				if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0)
+				{
+					if (player->alive == false)	player_respawn(vector2d(500, 250));
+					mm = 0;
+				}
 				else if (keys[SDL_SCANCODE_S]) mmbutton = 1;
 			}
 
@@ -115,7 +127,7 @@ int main(int argc, char * argv[])
 			{
 				playbutton = gf2d_sprite_load_image("images/play_unhovered.png");
 				quitbutton = gf2d_sprite_load_image("images/quit_hovered.png");
-				if (keys[SDL_SCANCODE_RETURN]) done = 1;
+				if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0) done = 1;
 				else if (keys[SDL_SCANCODE_W]) mmbutton = 0;
 			}
 
@@ -142,24 +154,59 @@ int main(int argc, char * argv[])
 				);
 		}
 
-		else if (mm == 2)
+
+		else if (mm == 2) //Pause Menu
 		{
+			if (buttondelay > 0) buttondelay--;
 			gf2d_sprite_draw_image(pausedmenu, vector2d(0, 0));
 
 			if (mmbutton == 0) //hovering play button
 			{
 				playbutton = gf2d_sprite_load_image("images/play_hovered.png");
+				homebutton = gf2d_sprite_load_image("images/home_unhovered.png");
 				quitbutton = gf2d_sprite_load_image("images/quit_unhovered.png");
 				if (keys[SDL_SCANCODE_RETURN]) mm = 0;
-				else if (keys[SDL_SCANCODE_S]) mmbutton = 1;
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 15;
+					mmbutton = 1;
+				}
 			}
 
-			if (mmbutton == 1) //hovering quit button
+			if (mmbutton == 1) //hovering home button
 			{
 				playbutton = gf2d_sprite_load_image("images/play_unhovered.png");
+				homebutton = gf2d_sprite_load_image("images/home_hovered.png");
+				quitbutton = gf2d_sprite_load_image("images/quit_unhovered.png");
+				if (keys[SDL_SCANCODE_RETURN])
+				{
+					buttondelay = 30;
+					mm = 1;
+				}
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
+				{
+					buttondelay = 15;
+					mmbutton = 0;
+				}
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 15;
+					mmbutton = 2;
+				}
+			}
+
+
+			if (mmbutton == 2) //hovering quit button
+			{
+				playbutton = gf2d_sprite_load_image("images/play_unhovered.png");
+				homebutton = gf2d_sprite_load_image("images/home_unhovered.png");
 				quitbutton = gf2d_sprite_load_image("images/quit_hovered.png");
 				if (keys[SDL_SCANCODE_RETURN]) done = 1;
-				else if (keys[SDL_SCANCODE_W]) mmbutton = 0;
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
+				{
+					buttondelay = 15;
+					mmbutton = 1;
+				}
 			}
 
 			gf2d_sprite_draw(
@@ -174,8 +221,19 @@ int main(int argc, char * argv[])
 				);
 
 			gf2d_sprite_draw(
-				quitbutton,
+				homebutton,
 				vector2d(600 - (75), 360),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(int)mf
+				);
+
+			gf2d_sprite_draw(
+				quitbutton,
+				vector2d(600 - (75), 430),
 				NULL,
 				NULL,
 				NULL,
@@ -265,6 +323,15 @@ int main(int argc, char * argv[])
 			{
 				weapon = gf2d_sprite_load_image("images/hammer.png");
 				player->currWeapon = 10;
+			}
+
+			if (SDL_GetTicks() % 100 == 0)
+			{
+				if (get_spawn_count() > 0)
+				{
+					enemy_spawn();
+					wavesystem->spawnCount--;
+				}
 			}
 
 			//Manual Spawning
@@ -466,6 +533,20 @@ int main(int argc, char * argv[])
 				gf2d_sprite_draw(
 					frozen,
 					vector2d(1200 - (5 * 69), 720 - 69),
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					(int)mf
+					);
+			}
+
+			if (player->alive == false)
+			{
+				gf2d_sprite_draw(
+					death,
+					vector2d(600 - (184), 360 - 200),
 					NULL,
 					NULL,
 					NULL,

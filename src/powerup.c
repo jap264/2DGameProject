@@ -135,6 +135,17 @@ Entity *p_instakill_spawn(Vector2D position)
 	return ent;
 }
 
+void random_powerup_spawn()
+{
+	int num = randNum();
+	Vector2D position = vector2d(600, 360);
+	if (num <= 3) p_health_spawn(position);
+	else if (num <= 5) p_speed_spawn(position);
+	else if (num <= 7) p_firerate_spawn(position);
+	else if (num == 8) p_invinc_spawn(position);
+	else p_instakill_spawn(position);
+}
+
 void powerup_update(Entity *self)
 {
 	if (!self) return;

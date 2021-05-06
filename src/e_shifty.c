@@ -102,7 +102,6 @@ void shifty_think(Entity *self)
 	if (self->glitch <= 0)
 	{
 		int num = randNum();
-
 		if (num <= 2) self->position.x += 100;
 		else if (num > 2 && num <= 5) self->position.x -= 100;
 		else if (num > 5 && num <= 8) self->position.y -= 100;

@@ -5,10 +5,12 @@
 #include "camera.h"
 #include "entity.h"
 #include "bullet.h"
+#include "powerup.h"
 #include "sounds.h"
 #include "rocket.h"
 #include "mine.h"
 #include "shape.h"
+#include "wavesystem.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -97,6 +99,8 @@ Entity *player_respawn(Vector2D position)
 	player->bossesKilled = 0;
 	player->multiplier = 1;
 	player->inARow = 0;
+	get_wavesystem()->spawnCount = 10;
+	get_wavesystem()->waveCount = 1;
 	return player->ent;
 }
 
@@ -209,6 +213,7 @@ void player_update(Entity *self)
 	{
 		player->multiplier++;
 		player->inARow = 0;
+		random_powerup_spawn();
 	}
 
 	//Powerups

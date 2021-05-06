@@ -47,4 +47,6 @@ Entity *p_invinc_spawn(Vector2D position);
 * @note doubles player's instakill for a duration
 */
 Entity *p_instakill_spawn(Vector2D position);
+
+void random_powerup_spawn();
 #endif
