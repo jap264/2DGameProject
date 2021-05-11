@@ -17,8 +17,6 @@ static WaveSystem *wavesystem = { 0 };
 void wavesystem_init()
 {
 	wavesystem = (WaveSystem *)gfc_allocate_array(sizeof(WaveSystem), 1);
-	wavesystem->waveCount = 1;
-	wavesystem->spawnCount = 10;
 	return;
 }
 

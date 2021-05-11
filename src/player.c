@@ -11,6 +11,7 @@
 #include "mine.h"
 #include "shape.h"
 #include "wavesystem.h"
+#include "skilltree.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -30,6 +31,10 @@ static int p_speedDelay = 0;
 static int p_firerateDelay = 0;
 static int p_invincDelay = 0;
 static int p_instakillDelay = 0;
+static int dashDelay = 0;
+static int dashCooldown = 0;
+static Bool dashCheck = false;
+static Bool dashing = false;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -180,10 +185,12 @@ void player_collide(Entity *self, Entity *other)
 		// check if player is invincible
 		if (player->p_invinc == false)
 		{
-			player->ent->health--;
+			if (player->shield == 1) player->shield--;
+			else player->ent->health--;
 			sounds_play_playerhit();
 			player->multiplier = 1;
 			player->inARow = 0;
+			if (get_skilltree()->hammer_perk == 3) ground_pound_spawn();
 		}
 		else slog("player is invincible and cannot take damage.");
 
@@ -232,8 +239,15 @@ void player_update(Entity *self)
 	if (p_instakillDelay > 0) p_instakillDelay--;
 	if (p_instakillDelay <= 0) player->p_instakill = false;
 
+	if (dashDelay > 0) dashDelay--;
+	if (dashDelay <= 0) dashing = false;
+
+	if (dashCooldown > 0) dashCooldown--;
+
 	if (player->p_speed == true) self->speed = 6;
+	else if (dashing == true) self->speed = 20;
 	else if (player->frozen == true) self->speed = 1;
+	else if (get_skilltree()->speed_perk == 3) self->speed = 4.5;
 	else self->speed = 3;
 
 	cameraSize = camera_get_dimensions();
@@ -270,6 +284,13 @@ void player_think(Entity *self)
 	// check for motion
 	if (player->currWeapon != 4)
 	{
+		if (keys[SDL_SCANCODE_SPACE] && dashDelay == 0 && dashCooldown == 0)
+		{
+			dashing = true;
+			dashCooldown = 300;
+			dashDelay = 7;
+		}
+
 		if (keys[SDL_SCANCODE_W] && self->position.y > 7)
 		{
 			self->position.y -= self->speed;

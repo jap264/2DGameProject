@@ -92,6 +92,7 @@ Entity *cannonball_spawn(Vector2D position)
 	ent->think = cannonball_think;
 	ent->collide = cannonball_collide;
 	ent->ent_type = 3;
+	ent->ttv = 300;
 
 	Vector2D aimdir, thrust;
 	float angle;

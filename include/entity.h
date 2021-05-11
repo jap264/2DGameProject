@@ -57,6 +57,11 @@ void entity_manager_think_entities();
 */
 void entity_manager_draw_entities();
 
+/**
+* @brief free all entities
+*/
+void entity_manager_free_entities();
+
 
 /**
 * @brief free all entities in the system and destroy entity manager
@@ -94,4 +99,5 @@ void follow(Entity *self, Entity *other, float speed);
 */
 void check_all_collisions();
 
+int get_entity_count();
 #endif

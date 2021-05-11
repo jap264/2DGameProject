@@ -52,6 +52,7 @@ Entity *pellet_spawn(Vector2D position)
 	ent->ent_type = 3;
 	ent->update = pellet_update;
 	ent->collide = pellet_collide;
+	ent->ttv = 200;
 
 
 	Vector2D aimdir, thrust;

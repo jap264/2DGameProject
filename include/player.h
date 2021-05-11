@@ -23,6 +23,7 @@ typedef struct Player_S
 	Bool	p_invinc;
 	Bool	p_instakill;
 	Bool	frozen;
+	int		shield;
 
 }Player;
 

@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "bullet.h"
 #include "sounds.h"
+#include "skilltree.h"
 
 void bullet_update(Entity *self);
 void bullet_collide(Entity *self, Entity *other);
@@ -30,9 +31,11 @@ Entity *pistol_round_spawn(int destinationx, int destinationy)
 	ent->update = bullet_update;
 	ent->collide = bullet_collide;
 	if (get_player()->p_instakill) ent->dmg = 20;
+	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 6;
 	else ent->dmg = 3;
 	ent->ttv = 600;
-	ent->speed = 2;
+	if (get_skilltree()->bullet_speed_perk == 3) ent->speed = 4;
+	else ent->speed = 2;
 	ent->ent_type = 1;
 	ent->weapon = 0;
 	bullet_travel(ent);
@@ -57,10 +60,12 @@ Entity *light_round_spawn(int destinationx, int destinationy)
 	ent->update = bullet_update;
 	ent->collide = bullet_collide;
 	ent->ttv = 400;
-	ent->speed = 4;
+	if (get_skilltree()->bullet_speed_perk == 3) ent->speed = 8;
+	else ent->speed = 4;
 	ent->ent_type = 1;
 	ent->weapon = 0;
 	if (get_player()->p_instakill) ent->dmg = 20;
+	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 4;
 	else ent->dmg = 2;
 	bullet_travel(ent);
 	return ent;
@@ -84,10 +89,12 @@ Entity *heavy_round_spawn(int destinationx, int destinationy)
 	ent->update = bullet_update;
 	ent->collide = bullet_collide;
 	ent->ttv = 200;
-	ent->speed = 6;
+	if (get_skilltree()->bullet_speed_perk == 3) ent->speed = 12;
+	else ent->speed = 6;
 	ent->ent_type = 1;
 	ent->weapon = 0;
 	if (get_player()->p_instakill) ent->dmg = 20;
+	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 2;
 	else ent->dmg = 1;
 	bullet_travel(ent);
 	return ent;
@@ -111,10 +118,12 @@ Entity *sniper_round_spawn(int destinationx, int destinationy)
 	ent->update = bullet_update;
 	ent->collide = bullet_collide;
 	ent->ttv = 400;
-	ent->speed = 10;
+	if (get_skilltree()->bullet_speed_perk == 3) ent->speed = 20;
+	else ent->speed = 10;
 	ent->ent_type = 1;
 	ent->weapon = 0;
 	if (get_player()->p_instakill) ent->dmg = 20;
+	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 20;
 	else ent->dmg = 10;
 	bullet_travel(ent);
 	return ent;
@@ -161,9 +170,18 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 	ent2->ttv = 200;
 	ent3->ttv = 200;
 
-	ent->speed = 6;
-	ent2->speed = 6;
-	ent3->speed = 6;
+	if (get_skilltree()->bullet_speed_perk == 3)
+	{
+		ent->speed = 12;
+		ent2->speed = 12;
+		ent3->speed = 12;
+	}
+	else
+	{
+		ent->speed = 6;
+		ent2->speed = 6;
+		ent3->speed = 6;
+	}
 
 	ent->ent_type = 1;
 	ent2->ent_type = 1;
@@ -178,6 +196,12 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 		ent->dmg = 20;
 		ent2->dmg = 20;
 		ent3->dmg = 20;
+	}
+	else if (get_skilltree()->strong_bullets_perk == 3)
+	{
+		ent->dmg = 4;
+		ent2->dmg = 4;
+		ent3->dmg = 4;
 	}
 	else
 	{

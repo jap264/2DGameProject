@@ -9,6 +9,7 @@ typedef struct
 {
 	Entity *entity_list;
 	Uint32  max_entities;
+	int		entity_count;
 }EntityManager;
 
 static EntityManager entity_manager = { 0 };
@@ -108,6 +109,20 @@ void entity_manager_draw_entities()
 	}
 }
 
+void entity_manager_free_entities()
+{
+	int i;
+	if (entity_manager.entity_list == NULL)
+	{
+		slog("entity system does not exist");
+		return;
+	}
+	for (i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (entity_manager.entity_list[i]._inuse == 0)continue;
+		entity_free(&entity_manager.entity_list[i]);
+	}
+}
 
 Entity *entity_new()
 {
@@ -122,6 +137,7 @@ Entity *entity_new()
 		if (entity_manager.entity_list[i]._inuse)continue;// someone else is using this one
 		memset(&entity_manager.entity_list[i], 0, sizeof(Entity));
 		entity_manager.entity_list[i]._inuse = 1;
+		entity_manager.entity_count++;
 		return &entity_manager.entity_list[i];
 	}
 	slog("no free entities available");
@@ -138,6 +154,7 @@ void entity_free(Entity *ent)
 	gf2d_sprite_free(ent->sprite);
 	ent->sprite = NULL;
 	ent->_inuse = 0;
+	entity_manager.entity_count--;
 }
 
 void entity_draw(Entity *ent)
@@ -239,5 +256,10 @@ void check_all_collisions()
 			}
 		}
 	}
+}
+
+int get_entity_count()
+{
+	return entity_manager.entity_count;
 }
 /*eol@eof*/
