@@ -4,6 +4,8 @@
 #include "camera.h"
 #include "entity.h"
 #include "sounds.h"
+#include "wavesystem.h"
+#include "skilltree.h"
 
 void shifty_update(Entity *self);
 void shifty_think(Entity *self);
@@ -29,6 +31,8 @@ Entity *shifty_spawn(Vector2D position)
 	ent->health = 5;
 	ent->ent_type = 2;
 	ent->glitch = 100;
+	ent->slowed = false;
+	get_wavesystem()->enemyCount++;
 	return ent;
 }
 
@@ -39,6 +43,7 @@ void shifty_collide(Entity *self, Entity *other)
 	if (other->ent_type == 1)
 	{
 		if (other->dmg != NULL) self->health -= other->dmg;
+		if (get_skilltree()->slow_bullets_perk == 3) self->slowed = true;
 		entity_free(other);
 	}
 
@@ -47,6 +52,8 @@ void shifty_collide(Entity *self, Entity *other)
 		get_player()->inARow++;
 		get_player()->enemiesKilled++;
 		sounds_play_enemydeath();
+		if (get_skilltree()->explode_perk == 3) explosion_spawn(self->position);
+		get_wavesystem()->enemyCount--;
 		entity_free(self);
 	}
 }
@@ -94,7 +101,8 @@ void shifty_think(Entity *self)
 	vector2d_normalize(&aimdir3);
 
 	// check for motion
-	vector2d_scale(thrust, aimdir, 1.6);
+	if (self->slowed) vector2d_scale(thrust, aimdir, 1.2);
+	else vector2d_scale(thrust, aimdir, 1.6);
 	vector2d_add(self->velocity, self->velocity, thrust);
 
 	if (self->glitch > 0) self->glitch--;

@@ -49,4 +49,6 @@ Entity *p_invinc_spawn(Vector2D position);
 Entity *p_instakill_spawn(Vector2D position);
 
 void random_powerup_spawn();
+
+void all_powerups_spawn();
 #endif

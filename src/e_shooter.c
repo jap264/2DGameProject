@@ -4,6 +4,8 @@
 #include "camera.h"
 #include "entity.h"
 #include "sounds.h"
+#include "wavesystem.h"
+#include "skilltree.h"
 
 void shooter_update(Entity *self);
 void pellet_update(Entity *self);
@@ -30,6 +32,9 @@ Entity *shooter_spawn(Vector2D position)
 	ent->rotation.y = 32;
 	ent->health = 6;
 	ent->ent_type = 2;
+	ent->slowed = false;
+	get_wavesystem()->enemyCount++;
+
 	return ent;
 }
 
@@ -80,6 +85,7 @@ void shooter_collide(Entity *self, Entity *other)
 	if (other->ent_type == 1)
 	{
 		if (other->dmg != NULL) self->health -= other->dmg;
+		if (get_skilltree()->slow_bullets_perk == 3) self->slowed = true;
 		entity_free(other);
 	}
 
@@ -88,6 +94,8 @@ void shooter_collide(Entity *self, Entity *other)
 		get_player()->inARow++;
 		get_player()->enemiesKilled++;
 		sounds_play_enemydeath();
+		if (get_skilltree()->explode_perk == 3) explosion_spawn(self->position);
+		get_wavesystem()->enemyCount--;
 		entity_free(self);
 	}
 }
@@ -139,7 +147,8 @@ void shooter_think(Entity *self)
 	vector2d_normalize(&aimdir);
 	// check for motion
 
-	vector2d_scale(thrust, aimdir, 1.2);
+	if (self->slowed) vector2d_scale(thrust, aimdir, 0.8);
+	else vector2d_scale(thrust, aimdir, 1.2);
 	vector2d_add(self->velocity, self->velocity, thrust);
 
 	if (SDL_GetTicks() % 100 == 0) pellet_spawn(self->position);

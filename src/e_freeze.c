@@ -4,6 +4,8 @@
 #include "camera.h"
 #include "entity.h"
 #include "sounds.h"
+#include "wavesystem.h"
+#include "skilltree.h"
 
 void freeze_update(Entity *self);
 void freeze_think(Entity *self);
@@ -28,6 +30,7 @@ Entity *freeze_spawn(Vector2D position)
 	ent->rotation.y = 32;
 	ent->health = 5;
 	ent->ent_type = 5;
+	get_wavesystem()->enemyCount++;
 	return ent;
 }
 
@@ -46,6 +49,8 @@ void freeze_collide(Entity *self, Entity *other)
 		get_player()->inARow++;
 		get_player()->enemiesKilled++;
 		sounds_play_enemydeath();
+		if (get_skilltree()->explode_perk == 3) explosion_spawn(self->position);
+		get_wavesystem()->enemyCount--;
 		entity_free(self);
 	}
 }

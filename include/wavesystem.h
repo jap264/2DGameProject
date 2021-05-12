@@ -5,6 +5,9 @@ typedef struct
 {
 	int		waveCount;	//current wave number
 	int		spawnCount; //number of enemies to spawn per round
+	int		enemyCount; //number of enemies left in the round
+	int		powerupCount; //number of powerups to spawn each round
+	int		allpowerups; //check to see if all powerups should spawn each round
 }WaveSystem;
 
 /*

@@ -146,6 +146,15 @@ void random_powerup_spawn()
 	else p_instakill_spawn(position);
 }
 
+void all_powerups_spawn()
+{
+	p_health_spawn(vector2d(600, 310));
+	p_speed_spawn(vector2d(550, 360));
+	p_firerate_spawn(vector2d(650, 360));
+	p_invinc_spawn(vector2d(565, 410));
+	p_instakill_spawn(vector2d(635, 410));
+}
+
 void powerup_update(Entity *self)
 {
 	if (!self) return;

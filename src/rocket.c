@@ -55,22 +55,22 @@ Entity *explosion_spawn(Vector2D position)
 		return NULL;
 	}
 
-	rocket->explosion = ent;
-	rocket->explosion->sprite = gf2d_sprite_load_image("images/explosion_large.png");
-	rocket->explosion->position = position;
-	rocket->explosion->ttv = 100;
-	rocket->explosion->ent_type = 6;
-	rocket->explosion->weapon = 1;
-	rocket->explosion->update = explosion_update;
+	ent->sprite = gf2d_sprite_load_image("images/explosion_large.png");
+	ent->position = position;
+	ent->update = explosion_update;
 
-	return rocket->explosion;
+	ent->ttv = 100;
+	ent->ent_type = 6;
+	ent->weapon = 1;
+
+	return ent;
 }
 
 void rocket_collide(Entity *self, Entity *other)
 {
 	if (!self || !other) return;
 
-	if (other->ent_type == 2 || other->ent_type == 7 || other->ent_type == 8) rocket_explode(self);
+	if (other->ent_type == 2 || other->ent_type == 5 || other->ent_type == 7 || other->ent_type == 8) rocket_explode(self);
 }
 
 void rocket_update(Entity *self)

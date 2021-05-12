@@ -17,6 +17,7 @@
 #include "e_shifty.h"
 #include "wavesystem.h"
 #include "skilltree.h"
+#include "powerup.h"
 
 int main(int argc, char * argv[])
 {
@@ -114,7 +115,7 @@ int main(int argc, char * argv[])
         SDL_GetMouseState(&mx,&my);
         /*mf+=0.1;
         if (mf >= 16.0)mf = 0;*/
-		if(SDL_GetTicks() % 200 == 0) slog("%i", get_entity_count());
+		//if(SDL_GetTicks() % 200 == 0) slog("%i, %i", get_spawn_count(), wavesystem->enemyCount);
 
 		if (mm == 1) //Main Menu
 		{
@@ -179,7 +180,12 @@ int main(int argc, char * argv[])
 				playbutton = gf2d_sprite_load_image("images/play_hovered.png");
 				homebutton = gf2d_sprite_load_image("images/home_unhovered.png");
 				quitbutton = gf2d_sprite_load_image("images/quit_unhovered.png");
-				if (keys[SDL_SCANCODE_RETURN]) mm = 0;
+				if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0)
+				{
+					buttondelay = 15;
+					mm = 0;
+				}
+
 				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
 				{
 					buttondelay = 15;
@@ -265,6 +271,9 @@ int main(int argc, char * argv[])
 		{
 			roundstart = 0;
 			if (skilltree->shield_perk == 3) player->shield = 1;
+			if (skilltree->all_powerups_perk == 3) wavesystem->allpowerups = 1;
+			else if (skilltree->random_powerup_perk == 3) wavesystem->powerupCount = 1;
+
 			if (buttondelay > 0) buttondelay--;
 			
 			gf2d_sprite_draw_image(skilltreemenu, vector2d(0, 0));
@@ -279,6 +288,13 @@ int main(int argc, char * argv[])
 					buttondelay = 20;
 					skillselect++;
 				}
+
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 3;
+				}
+
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->speed_perk == 1)
 				{
 					skilltree->speed_perk = 3;
@@ -298,11 +314,13 @@ int main(int argc, char * argv[])
 					buttondelay = 20;
 					skillselect--;
 				}
-				else if (keys[SDL_SCANCODE_D] && buttondelay == 0)
+
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
 				{
 					buttondelay = 20;
-					skillselect++;
+					skillselect = 5;
 				}
+
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->bullet_speed_perk == 1)
 				{
 					skilltree->bullet_speed_perk = 3;
@@ -317,15 +335,22 @@ int main(int argc, char * argv[])
 			else if (skillselect == 3)
 			{
 				gf2d_sprite_draw_image(skillcursor, vector2d(103, 332));
-				if (keys[SDL_SCANCODE_A] && buttondelay == 0)
-				{
-					buttondelay = 20;
-					skillselect--;
-				}
-				else if (keys[SDL_SCANCODE_D] && buttondelay == 0)
+				if (keys[SDL_SCANCODE_D] && buttondelay == 0)
 				{
 					buttondelay = 20;
 					skillselect++;
+				}
+
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 7;
+				}
+
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 1;
 				}
 
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->dash_perk == 1)
@@ -352,9 +377,22 @@ int main(int argc, char * argv[])
 					skillselect++;
 				}
 
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 8;
+				}
+
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 1;
+				}
+
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->random_powerup_perk == 1)
 				{
 					skilltree->random_powerup_perk = 3;
+					random_powerup_spawn();
 					skilltree->all_powerups_perk = 1;
 					wavesystem->waveCount++;
 					wavesystem->spawnCount = 5 * wavesystem->waveCount;
@@ -376,6 +414,18 @@ int main(int argc, char * argv[])
 					skillselect++;
 				}
 
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 9;
+				}
+
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 2;
+				}
+
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->slow_bullets_perk == 1)
 				{
 					skilltree->slow_bullets_perk = 3;
@@ -394,10 +444,17 @@ int main(int argc, char * argv[])
 					buttondelay = 20;
 					skillselect--;
 				}
-				else if (keys[SDL_SCANCODE_D] && buttondelay == 0)
+
+				else if (keys[SDL_SCANCODE_W] && buttondelay == 0)
 				{
 					buttondelay = 20;
-					skillselect++;
+					skillselect = 10;
+				}
+
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 2;
 				}
 
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->strong_bullets_perk == 1)
@@ -413,15 +470,16 @@ int main(int argc, char * argv[])
 			else if (skillselect == 7)
 			{
 				gf2d_sprite_draw_image(skillcursor, vector2d(104, 136));
-				if (keys[SDL_SCANCODE_A] && buttondelay == 0)
-				{
-					buttondelay = 20;
-					skillselect--;
-				}
-				else if (keys[SDL_SCANCODE_D] && buttondelay == 0)
+				if (keys[SDL_SCANCODE_D] && buttondelay == 0)
 				{
 					buttondelay = 20;
 					skillselect++;
+				}
+
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 3;
 				}
 
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->shield_perk == 1)
@@ -448,9 +506,17 @@ int main(int argc, char * argv[])
 					skillselect++;
 				}
 
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 4;
+				}
+
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->all_powerups_perk == 1)
 				{
 					skilltree->all_powerups_perk = 3;
+					all_powerups_spawn();
+					wavesystem->powerupCount = 0;
 					wavesystem->waveCount++;
 					wavesystem->spawnCount = 5 * wavesystem->waveCount;
 					mm = 0;
@@ -471,6 +537,12 @@ int main(int argc, char * argv[])
 					skillselect++;
 				}
 
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 5;
+				}
+
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->hammer_perk == 1)
 				{
 					skilltree->hammer_perk = 3;
@@ -487,6 +559,12 @@ int main(int argc, char * argv[])
 				{
 					buttondelay = 20;
 					skillselect--;
+				}
+
+				else if (keys[SDL_SCANCODE_S] && buttondelay == 0)
+				{
+					buttondelay = 20;
+					skillselect = 6;
 				}
 				
 				else if (keys[SDL_SCANCODE_RETURN] && buttondelay == 0 && skilltree->explode_perk == 1)
@@ -584,7 +662,7 @@ int main(int argc, char * argv[])
 			}
 
 			//Wave Spawning
-			if (SDL_GetTicks() % 100 == 0)
+			if (SDL_GetTicks() % (107 - (7 * wavesystem->waveCount)) == 0)
 			{
 				if (get_spawn_count() > 0)
 				{
@@ -594,10 +672,22 @@ int main(int argc, char * argv[])
 				}
 			}
 
-			if (get_entity_count() == 1 && roundstart == 1) mm = 3;
+			if (wavesystem->allpowerups > 0)
+			{
+				all_powerups_spawn();
+				wavesystem->allpowerups--;
+			}
+			else if (wavesystem->powerupCount > 0)
+			{
+				random_powerup_spawn();
+				wavesystem->powerupCount--;
+			}
+
+			//End the round
+			if (wavesystem->spawnCount == 0 && wavesystem->enemyCount == 0) mm = 3;
 
 			//Manual Spawning
-			if (keys[SDL_SCANCODE_Y] && SDL_GetTicks() % 50 == 0)
+			/*if (keys[SDL_SCANCODE_Y] && SDL_GetTicks() % 50 == 0)
 			{
 				walker_spawn(vector2d(700, 250));
 			}
@@ -657,7 +747,7 @@ int main(int argc, char * argv[])
 			if (keys[SDL_SCANCODE_RETURN] && SDL_GetTicks() % 50 == 0 && player->alive == false)
 			{
 				player_respawn(vector2d(500, 250));
-			}
+			}*/
 
 			//Mouse Draw
 			gf2d_sprite_draw(

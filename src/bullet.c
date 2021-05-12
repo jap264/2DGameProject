@@ -31,7 +31,7 @@ Entity *pistol_round_spawn(int destinationx, int destinationy)
 	ent->update = bullet_update;
 	ent->collide = bullet_collide;
 	if (get_player()->p_instakill) ent->dmg = 20;
-	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 6;
+	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 4;
 	else ent->dmg = 3;
 	ent->ttv = 600;
 	if (get_skilltree()->bullet_speed_perk == 3) ent->speed = 4;
@@ -65,7 +65,7 @@ Entity *light_round_spawn(int destinationx, int destinationy)
 	ent->ent_type = 1;
 	ent->weapon = 0;
 	if (get_player()->p_instakill) ent->dmg = 20;
-	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 4;
+	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 3;
 	else ent->dmg = 2;
 	bullet_travel(ent);
 	return ent;
@@ -123,7 +123,7 @@ Entity *sniper_round_spawn(int destinationx, int destinationy)
 	ent->ent_type = 1;
 	ent->weapon = 0;
 	if (get_player()->p_instakill) ent->dmg = 20;
-	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 20;
+	else if (get_skilltree()->strong_bullets_perk == 3) ent->dmg = 11;
 	else ent->dmg = 10;
 	bullet_travel(ent);
 	return ent;
@@ -199,9 +199,9 @@ void *shotgun_shells_spawn(int destinationx, int destinationy)
 	}
 	else if (get_skilltree()->strong_bullets_perk == 3)
 	{
-		ent->dmg = 4;
-		ent2->dmg = 4;
-		ent3->dmg = 4;
+		ent->dmg = 3;
+		ent2->dmg = 3;
+		ent3->dmg = 3;
 	}
 	else
 	{

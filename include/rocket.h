@@ -27,7 +27,7 @@ Entity *rocket_spawn();
 * @brief spawn a explosion entity
 * @return NULL on error, or a pointer to a new rocket entity
 */
-Entity *explosion_spawn(Vector2D *position);
+Entity *explosion_spawn(Vector2D position);
 
 void *rocket_explode(Entity *self);
 

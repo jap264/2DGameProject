@@ -4,6 +4,9 @@
 #include "camera.h"
 #include "entity.h"
 #include "sounds.h"
+#include "skilltree.h"
+#include "wavesystem.h"
+#include "rocket.h"
 
 void walker_update(Entity *self);
 void walker_think(Entity *self);
@@ -25,8 +28,10 @@ Entity *walker_spawn(Vector2D position)
 	ent->collide = walker_collide;
 	ent->rotation.x = 32;
 	ent->rotation.y = 32;
-	ent->health = 3;
+	ent->health = 2 + (get_wavesystem()->waveCount);
 	ent->ent_type = 2;
+	ent->slowed = false;
+	get_wavesystem()->enemyCount++;
 
 	return ent;
 }
@@ -38,6 +43,7 @@ void walker_collide(Entity *self, Entity *other)
 	if (other->ent_type == 1)
 	{
 		if (other->dmg != NULL) self->health -= other->dmg;
+		if (get_skilltree()->slow_bullets_perk == 3) self->slowed = true;
 		entity_free(other);
 	}
 
@@ -46,6 +52,8 @@ void walker_collide(Entity *self, Entity *other)
 		get_player()->inARow++;
 		get_player()->enemiesKilled++;
 		sounds_play_enemydeath();
+		if(get_skilltree()->explode_perk == 3) explosion_spawn(self->position);
+		get_wavesystem()->enemyCount--;
 		entity_free(self);
 	}
 }
@@ -83,7 +91,8 @@ void walker_think(Entity *self)
 	vector2d_normalize(&aimdir);
 	// check for motion
 
-	vector2d_scale(thrust, aimdir, 1.4);
+	if (self->slowed) vector2d_scale(thrust, aimdir, 1);
+	else vector2d_scale(thrust, aimdir, 1.4);
 	vector2d_add(self->velocity, self->velocity, thrust);
 
 }

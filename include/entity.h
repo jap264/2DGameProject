@@ -33,6 +33,7 @@ typedef struct Entity_s
 	int			dmg;	//used for projectiles
 	int			health;
 	int			glitch; //used for delay of tp mob
+	Bool		slowed; //used for slow bullets perk
 
 }Entity;
 
