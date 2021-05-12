@@ -29,7 +29,7 @@ Entity *rocket_spawn();
 */
 Entity *explosion_spawn(Vector2D position);
 
-void *rocket_explode(Entity *self);
+void rocket_explode(Entity *self);
 
 void rocket_travel(Entity *self);
 

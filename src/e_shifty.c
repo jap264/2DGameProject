@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "sounds.h"
 #include "wavesystem.h"
+#include "rocket.h"
 #include "skilltree.h"
 
 void shifty_update(Entity *self);
@@ -73,7 +74,6 @@ void shifty_update(Entity *self)
 
 void shifty_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, aimdir2, aimdir3, thrust;
 	float angle;
 	int mx, my;

@@ -9,6 +9,8 @@
 #include "sounds.h"
 #include "rocket.h"
 #include "mine.h"
+#include "grenade.h"
+#include "hammer.h"
 #include "shape.h"
 #include "wavesystem.h"
 #include "skilltree.h"
@@ -265,7 +267,7 @@ void player_update(Entity *self)
 void player_think(Entity *self)
 {
 	const Uint8 *keys;
-	Vector2D aimdir, camera, thrust;
+	Vector2D aimdir;
 	float angle;
 	int mx, my;
 	if (!self)return;
@@ -284,7 +286,7 @@ void player_think(Entity *self)
 	// check for motion
 	if (player->currWeapon != 4)
 	{
-		if (keys[SDL_SCANCODE_SPACE] && dashDelay == 0 && dashCooldown == 0)
+		if (get_skilltree()->dash_perk == 3 && keys[SDL_SCANCODE_SPACE] && dashDelay == 0 && dashCooldown == 0)
 		{
 			dashing = true;
 			dashCooldown = 300;
@@ -522,7 +524,7 @@ Player *get_player()
 	return player;
 }
 
-int *get_player_health()
+int get_player_health()
 {
 	return player->ent->health;
 }

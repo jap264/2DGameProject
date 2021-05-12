@@ -35,7 +35,7 @@ Entity *light_round_spawn(int destinationx, int destinationy);
 * @param destinationy location (y) for the entity to travel to
 * @return NULL on error, or a pointer to a new bullet entity
 */
-void *shotgun_shells_spawn(int destinationx, int destinationy);
+void shotgun_shells_spawn(int destinationx, int destinationy);
 
 /**
 * @brief spawn a heavy round entity

@@ -111,7 +111,6 @@ void boss_melee_update(Entity *self)
 
 void boss_melee_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;

@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "sounds.h"
 #include "wavesystem.h"
+#include "rocket.h"
 #include "skilltree.h"
 
 void freeze_update(Entity *self);
@@ -70,7 +71,6 @@ void freeze_update(Entity *self)
 
 void freeze_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;

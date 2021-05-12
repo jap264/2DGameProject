@@ -73,7 +73,6 @@ void walker_update(Entity *self)
 
 void walker_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;

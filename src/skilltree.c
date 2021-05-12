@@ -24,6 +24,17 @@ void skilltree_init()
 	Sprite *speed, *random_powerup, *dash, *all_powerups, *shield, 
 		*bullet_speed, *slow_bullets, *strong_bullets, *explode, *hammer;
 
+	speed = gf2d_sprite_load_image("images/speed_perk/unlocked.png");
+	bullet_speed = gf2d_sprite_load_image("images/bullet_speed_perk/unlocked.png");
+	random_powerup = gf2d_sprite_load_image("images/random_powerup_perk/locked.png");
+	dash = gf2d_sprite_load_image("images/dash_perk/locked.png");
+	slow_bullets = gf2d_sprite_load_image("images/slow_bullets_perk/locked.png");
+	strong_bullets = gf2d_sprite_load_image("images/strong_bullets_perk/locked.png");
+	all_powerups = gf2d_sprite_load_image("images/all_powerups_perk/locked.png");
+	shield = gf2d_sprite_load_image("images/shield_perk/locked.png");
+	explode = gf2d_sprite_load_image("images/explode_perk/locked.png");
+	hammer = gf2d_sprite_load_image("images/hammer_perk/locked.png");
+
 	skilltree->speed = speed;
 	skilltree->random_powerup = random_powerup;
 	skilltree->dash = dash;

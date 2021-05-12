@@ -915,7 +915,7 @@ int main(int argc, char * argv[])
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
        
-        //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+        slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     slog("---==== END ====---");
     return 0;

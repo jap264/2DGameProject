@@ -37,7 +37,7 @@ SDL_Rect shape_rect_to_sdl_rect(ShapeRect r)
 */
 Bool shape_circle_collision(ShapeCircle a, ShapeCircle b)
 {
-	if (!a.r || !b.r) return;
+	if (!a.r || !b.r) return NULL;
 
 	float radii2;
 	float c2;

@@ -33,6 +33,6 @@ Entity *pellet_spawn(Vector2D position);
 *	@brief checks what the shooter collided with and respond accordingly
 *	@param other sthe entity the shooter collided with
 */
-void shooter_collide(Entity *other);
+void shooter_collide(Entity *self, Entity *other);
 
 #endif

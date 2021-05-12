@@ -74,9 +74,7 @@ void grenade_travel(Entity *self)
 {
 	if (!self) return;
 	int mx = self->destinationx, my = self->destinationy;
-	Vector2D aimdir, camera, thrust;
-	mx += camera.x;
-	my += camera.y;
+	Vector2D aimdir, thrust;
 	aimdir.x = mx - (self->position.x);
 	aimdir.y = my - (self->position.y);
 	vector2d_normalize(&aimdir);

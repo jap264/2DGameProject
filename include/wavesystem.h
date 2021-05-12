@@ -28,11 +28,11 @@ WaveSystem *get_wavesystem();
 /*
 * @brief gives waveCount
 */
-int *get_wave_count();
+int get_wave_count();
 
 /*
 * @brief gives spawnCount
 */
-int *get_spawn_count();
+int get_spawn_count();
 
 #endif

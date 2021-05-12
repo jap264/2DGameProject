@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "sounds.h"
 #include "wavesystem.h"
+#include "rocket.h"
 #include "skilltree.h"
 
 void armored_update(Entity *self);
@@ -73,7 +74,6 @@ void armored_update(Entity *self)
 
 void armored_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;

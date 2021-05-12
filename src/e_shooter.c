@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "sounds.h"
 #include "wavesystem.h"
+#include "rocket.h"
 #include "skilltree.h"
 
 void shooter_update(Entity *self);
@@ -61,7 +62,6 @@ Entity *pellet_spawn(Vector2D position)
 
 
 	Vector2D aimdir, thrust;
-	float angle;
 	int mx, my;
 
 	mx = get_player_entity()->position.x + 64;
@@ -76,6 +76,7 @@ Entity *pellet_spawn(Vector2D position)
 
 	vector2d_scale(thrust, aimdir, ent->speed);
 	vector2d_add(ent->velocity, ent->velocity, thrust);
+	return ent;
 }
 
 void shooter_collide(Entity *self, Entity *other)
@@ -84,7 +85,8 @@ void shooter_collide(Entity *self, Entity *other)
 
 	if (other->ent_type == 1)
 	{
-		if (other->dmg != NULL) self->health -= other->dmg;
+		if (other->dmg == NULL) return;
+		else self->health -= other->dmg;
 		if (get_skilltree()->slow_bullets_perk == 3) self->slowed = true;
 		entity_free(other);
 	}

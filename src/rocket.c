@@ -8,13 +8,15 @@
 void rocket_update(Entity *self);
 void rocket_think(Entity *self);
 void explosion_update(Entity *self);
-void rocket_collide(Entity *self);
+void rocket_collide(Entity *self, Entity *other);
 static Rocket *rocket = { 0 };
 
 void rocket_init()
 {
 	rocket = (Rocket *)gfc_allocate_array(sizeof(Rocket), 1);
 	rocket->alive = false;
+
+	return;
 }
 
 Entity *rocket_spawn()
@@ -71,6 +73,7 @@ void rocket_collide(Entity *self, Entity *other)
 	if (!self || !other) return;
 
 	if (other->ent_type == 2 || other->ent_type == 5 || other->ent_type == 7 || other->ent_type == 8) rocket_explode(self);
+	return;
 }
 
 void rocket_update(Entity *self)
@@ -84,11 +87,13 @@ void rocket_update(Entity *self)
 	{
 		vector2d_clear(self->velocity);
 	}
+	return;
 }
 
 void explosion_update(Entity *self)
 {
 	self->circle = shape_circle(self->position.x + 32, self->position.y + 32, 16);
+	return;
 }
 
 void rocket_think(Entity *self)
@@ -115,15 +120,17 @@ void rocket_think(Entity *self)
 
 	//need a fail safe to delete rockets
 	if (self->ttv == 1) rocket_explode(self);
+	return;
 }
 
-void *rocket_explode(Entity *self)
+void rocket_explode(Entity *self)
 {
 	Vector2D position = self->position;
 	position.x -= 16;
 	position.y -= 16;
 	explosion_spawn(position);
 	rocket->alive = false;
+	return;
 }
 
 Rocket *get_rocket()

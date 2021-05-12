@@ -21,7 +21,7 @@ typedef struct Entity_s
 	void		(*think)(struct Entity_s *self);
 	void		(*draw)(struct Entity_s *self);
 	void		(*free)(struct Entity_s *self);
-	void		(*collide)(struct Entity_s *other);
+	void		(*collide)(struct Entity_s *self, struct Entity_s *other);
 	void       *data;
 	int			ent_type;	//0 = player, 1 = player projectiles, 2 = enemies, 3 = enemy projectiles, 4 = powerups, 5 = e_freeze, 6 = p_projectiles that don't die, 7 = melee boss, 8 = projectile boss, 9 = minions, 10 = reverse cannonball
 	int			powerup;	//0 = health, 1 = speed, 2 = firerate, 3 = invinc, 4 = instakill

@@ -49,12 +49,12 @@ WaveSystem *get_wavesystem()
 	return wavesystem;
 }
 
-int *get_wave_count()
+int get_wave_count()
 {
 	return wavesystem->waveCount;
 }
 
-int *get_spawn_count()
+int get_spawn_count()
 {
 	return wavesystem->spawnCount;
 }

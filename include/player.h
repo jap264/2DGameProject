@@ -45,7 +45,7 @@ Entity *player_respawn(Vector2D position);
 *	@brief checks what the player collided with and respond accordingly
 *	@param other the entity the player collided with
 */
-void player_collide(Entity *other);
+void player_collide(Entity *self, Entity *other);
 
 /*
 *	@brief saves enemies and bosses killed if higher than highscores
@@ -75,6 +75,6 @@ Player *get_player();
 /*
 *	@brief returns the player's health
 */
-int *get_player_health();
+int get_player_health();
 
 #endif

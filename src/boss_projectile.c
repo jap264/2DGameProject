@@ -7,7 +7,7 @@
 
 void boss_projectile_update(Entity *self);
 void boss_projectile_think(Entity *self);
-void boss_projectile_collide(Entity *self);
+void boss_projectile_collide(Entity *self, Entity *other);
 
 void cannonball_update(Entity *self);
 void cannonball_think(Entity *self);
@@ -95,7 +95,6 @@ Entity *cannonball_spawn(Vector2D position)
 	ent->ttv = 300;
 
 	Vector2D aimdir, thrust;
-	float angle;
 	int mx, my;
 
 	mx = get_player_entity()->position.x + 80;
@@ -150,7 +149,6 @@ void cannonball_collide(Entity *self, Entity *other)
 	if (other->weapon == 3)
 	{
 		Vector2D aimdir, thrust;
-		float angle;
 		int mx, my;
 
 		mx = boss_projectile->ent->position.x + 80;
@@ -225,7 +223,6 @@ void cannonball_update(Entity *self)
 
 void boss_projectile_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;
@@ -254,7 +251,6 @@ void boss_projectile_think(Entity *self)
 
 void minion_think(Entity *self)
 {
-	const Uint8 *keys;
 	Vector2D aimdir, thrust;
 	float angle;
 	int mx, my;
@@ -277,25 +273,6 @@ void minion_think(Entity *self)
 
 void cannonball_think(Entity *self)
 {
-	const Uint8 *keys;
-	Vector2D aimdir, thrust;
-	float angle;
-	int mx, my;
 	if (!self)return;
-
-	//mx = get_player_entity()->position.x + 64;
-	//my = get_player_entity()->position.y + 64;
-
-	//aimdir.x = mx - (self->position.x + 80);
-	//aimdir.y = my - (self->position.y + 80);
-	//angle = vector_angle(aimdir.x, aimdir.y);
-	//self->rotation.z = angle + 90;
-	//// turn aimdir into a unit vector
-	//vector2d_normalize(&aimdir);
-	//// check for motion
-
-	//vector2d_scale(thrust, aimdir, 1);
-	//if (!boss_projectile->frozen) vector2d_add(self->velocity, self->velocity, thrust);
-	//else vector2d_clear(self->velocity);
 
 }

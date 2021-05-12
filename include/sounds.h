@@ -34,13 +34,4 @@ void sounds_play_playerdeath();
 */
 void sounds_play_enemydeath();
 
-/*
-* @brief plays bullet shot sound
-*/
-void sounds_play_bulletshot();
-
-/*
-* @brief plays dog round sount
-*/
-void sounds_play_doground();
 #endif

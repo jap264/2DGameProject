@@ -7,7 +7,7 @@
 
 void mine_update(Entity *self);
 void mine_think(Entity *self);
-void mine_collide(Entity *self);
+void mine_collide(Entity *self, Entity *other);
 void mine_explosion_update(Entity *self);
 
 Entity *mine_spawn()

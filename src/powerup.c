@@ -167,7 +167,7 @@ void powerup_think(Entity *self)
 
 }
 
-void powerup_collide(Entity *self)
+void powerup_collide(Entity *self, Entity *other)
 {
 	if (!self) return;
 

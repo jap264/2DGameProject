@@ -129,13 +129,13 @@ Entity *sniper_round_spawn(int destinationx, int destinationy)
 	return ent;
 }
 
-void *shotgun_shells_spawn(int destinationx, int destinationy)
+void shotgun_shells_spawn(int destinationx, int destinationy)
 {
 	Entity *ent = entity_new(), *ent2 = entity_new(), *ent3 = entity_new();
 	if (!ent || !ent2 || !ent3)
 	{
 		slog("failed to create entity for the bullet");
-		return NULL;
+		return;
 	}
 
 	ent->sprite = gf2d_sprite_load_image("images/shell.png");
@@ -257,7 +257,6 @@ void bullet_collide(Entity *self, Entity *other)
 	if (other->ent_type == 7)
 	{
 		Vector2D aimdir, thrust;
-		float angle;
 		int mx, my;
 
 		mx = get_player_entity()->position.x + 64;
@@ -279,7 +278,7 @@ void bullet_travel(Entity *self)
 {
 	if (!self) return;
 	int mx = self->destinationx, my = self->destinationy;
-	Vector2D aimdir, camera, thrust;
+	Vector2D aimdir, thrust;
 	/*mx += camera.x;
 	my += camera.y;*/
 	aimdir.x = mx - (self->position.x);
@@ -293,7 +292,7 @@ void shotgun_spread(Entity *bullet1, Entity *bullet2, Entity *bullet3)
 {
 	if (!bullet1 || !bullet2 || !bullet3) return;
 	int mx = bullet1->destinationx, my = bullet1->destinationy;
-	Vector2D aimdir, aimdir2, aimdir3, camera, thrust;
+	Vector2D aimdir, aimdir2, aimdir3, thrust;
 	/*mx += camera.x;
 	my += camera.y;*/
 
@@ -324,9 +323,7 @@ void thunderwave_travel(Entity *self)
 {
 	if (!self) return;
 	int mx = self->destinationx, my = self->destinationy;
-	Vector2D aimdir, camera, thrust;
-	mx += camera.x;
-	my += camera.y;
+	Vector2D aimdir, thrust;
 	aimdir.x = mx - (self->position.x +50);
 	aimdir.y = my - (self->position.y +50);
 	vector2d_normalize(&aimdir);
